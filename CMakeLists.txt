@@ -1,6 +1,10 @@
-cmake_minimum_required(VERSION 4.0)
+cmake_minimum_required(VERSION 3.22.1)
 project(MPI C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(MPI main.c)
+add_executable(MPI main.c
+        tasks/pi.c
+)
+
+target_include_directories(MPI PRIVATE ${CMAKE_SOURCE_DIR}/tasks)
