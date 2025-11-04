@@ -28,7 +28,7 @@ int runTask2() {
     srand(time(NULL) + rank);
 
     if (rank == 0)
-        printf("  Size | Time (s)\n");
+        printf("  Size |   Row Time (s)  | Column Time (s) |  Block Time (s)\n");
 
     for (int n = 0; n <= 20000; n += 500) {
         double *matrix = NULL;
@@ -37,13 +37,15 @@ int runTask2() {
             matrix = generate_matrix(n);
             vector = generate_vector(n);
         } else {
+            matrix = (double*)calloc(n * n, sizeof(double));
             vector = (double*)calloc(n, sizeof(double));
         }
 
+        MPI_Bcast(matrix, n*n, MPI_DOUBLE, 0, MPI_COMM_WORLD);
         MPI_Bcast(vector, n, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
         row(n, matrix, vector);
-        // column(n, matrix, vector);
+        column(n, matrix, vector);
         // block(n, matrix, vector);
 
         if (matrix) free(matrix);
@@ -109,7 +111,7 @@ void row(int n, double *matrix, double *vector) {
 
     double t1 = MPI_Wtime();
     if (rank == 0)
-        printf("%6d | %.7lf\n", n, t1 - t0);
+        printf("%6d | %.13lf", n, t1 - t0);
 
     free(local_matrix);
     free(local_result);
@@ -118,4 +120,40 @@ void row(int n, double *matrix, double *vector) {
         free(recvcounts);
         free(displs);
     }
+}
+
+
+void column(int n, double *matrix, double *vector) {
+    MPI_Barrier(MPI_COMM_WORLD);
+    double t0 = MPI_Wtime();
+
+    int rank, size;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+
+    int base = n / size, rem = n % size;
+    int col_start = rank * base + (rank < rem ? rank : rem);
+    int col_count = base + (rank < rem);
+
+    double *local_result = (double*)calloc(n, sizeof(double));
+
+    for (int col = col_start; col < col_start + col_count; ++col) {
+        for (int row = 0; row < n; ++row) {
+            local_result[row] += matrix[row * n + col] * vector[col];
+        }
+    }
+
+    double *result = NULL;
+    if (rank == 0) result = (double*)calloc(n, sizeof(double));
+
+    MPI_Reduce(local_result, result, n, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+
+    double t1 = MPI_Wtime();
+
+    if (rank == 0)
+        printf(" | %.13lf\n", t1 - t0);
+
+    free(local_result);
+    if (rank == 0)
+        free(result);
 }
