@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-mpicc -o main main.c tasks/*.c
+mpicc -o main main.c tasks/*.c -lm
 
 NPROCS=4
 
