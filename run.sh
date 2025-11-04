@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/bash
 
 mpicc -o main main.c tasks/*.c -lm
 
