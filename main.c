@@ -38,7 +38,7 @@ int runTask(int taskNumber) {
         case 1:
             return runTask1();
         case 2:
-            break;
+            return runTask2();
         case 3:
             break;
         default:
