@@ -2,200 +2,234 @@
 #include <mpi.h>
 #include <stdlib.h>
 #include <time.h>
-#include <math.h>
+#include <string.h>
 
-double *generate_matrix(int n) {
-    double *matrix = (double*)calloc(n * n, sizeof(double));
-    for (int i = 0; i < n * n; ++i)
-        matrix[i] = ((double)rand()) / RAND_MAX;
-    return matrix;
+static double *generate_matrix(int n) {
+    double *a = (double*)calloc((size_t)n*(size_t)n, sizeof(double));
+    for (int i = 0; i < n*n; ++i) a[i] = (double)rand() / RAND_MAX;
+    return a;
+}
+static double *generate_vector(int n) {
+    double *x = (double*)calloc((size_t)n, sizeof(double));
+    for (int i = 0; i < n; ++i) x[i] = (double)rand() / RAND_MAX;
+    return x;
 }
 
-double *generate_vector(int n) {
-    double *vector = (double*)calloc(n, sizeof(double));
-    for (int i = 0; i < n; ++i)
-        vector[i] = ((double)rand()) / RAND_MAX;
-    return vector;
+static void split_1d(int n, int r, int size, int *start, int *count) {
+    int base = (size > 0) ? n / size : 0;
+    int rem  = (size > 0) ? n % size : 0;
+    *start = r * base + (r < rem ? r : rem);
+    *count = base + (r < rem);
 }
 
-void row(int n, double* matrix, double* vector);
-void column(int n, double* matrix, double* vector);
-void block(int n, double* matrix, double* vector);
+static void row(int n, double *Aroot, double *x) {
+    MPI_Barrier(MPI_COMM_WORLD);
+    double t0 = MPI_Wtime();
+
+    int rank, size;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+
+    int r0, rc; split_1d(n, rank, size, &r0, &rc);
+
+    double *A = (rc > 0) ? (double*)malloc((size_t)rc*(size_t)n*sizeof(double)) : NULL;
+    double *y_local = (rc > 0) ? (double*)calloc((size_t)rc, sizeof(double)) : NULL;
+
+    if (rank == 0) {
+        for (int r = 0; r < size; ++r) {
+            int s, c; split_1d(n, r, size, &s, &c);
+            if (c <= 0) continue;
+            if (r == 0) {
+                memcpy(A, Aroot + (size_t)s*(size_t)n, (size_t)c*(size_t)n*sizeof(double));
+            } else {
+                MPI_Send(Aroot + (size_t)s*(size_t)n, c*n, MPI_DOUBLE, r, 10, MPI_COMM_WORLD);
+            }
+        }
+    } else if (rc > 0) {
+        MPI_Recv(A, rc*n, MPI_DOUBLE, 0, 10, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+    }
+
+    for (int i = 0; i < rc; ++i) {
+        const double *rowp = A + (size_t)i*(size_t)n;
+        double s = 0.0;
+        for (int j = 0; j < n; ++j) s += rowp[j] * x[j];
+        y_local[i] = s;
+    }
+
+    double *y = NULL;
+    int *counts = NULL, *displs = NULL;
+    if (rank == 0) {
+        y = (double*)calloc((size_t)n, sizeof(double));
+        counts = (int*)malloc((size_t)size*sizeof(int));
+        displs = (int*)malloc((size_t)size*sizeof(int));
+        for (int r = 0, pos = 0; r < size; ++r) {
+            int s, c; split_1d(n, r, size, &s, &c);
+            counts[r] = c; displs[r] = pos; pos += c;
+        }
+    }
+    MPI_Gatherv(y_local, rc, MPI_DOUBLE, y, counts, displs, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+
+    double t1 = MPI_Wtime();
+    double t_local = t1 - t0, t_max = 0.0;
+    MPI_Reduce(&t_local, &t_max, 1, MPI_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
+    if (rank == 0) printf("%6d | %.13lf", n, t_max);
+
+    free(A); free(y_local);
+    if (rank == 0) { free(y); free(counts); free(displs); }
+}
+
+static void column(int n, double *Aroot, double *x) {
+    MPI_Barrier(MPI_COMM_WORLD);
+    double t0 = MPI_Wtime();
+
+    int rank, size;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+
+    int c0, cc; split_1d(n, rank, size, &c0, &cc);
+
+    double *cols = (cc > 0) ? (double*)malloc((size_t)n*(size_t)cc*sizeof(double)) : NULL;
+
+    if (rank == 0) {
+        for (int r = 0; r < size; ++r) {
+            int s, c; split_1d(n, r, size, &s, &c);
+            if (c <= 0) continue;
+
+            if (r == 0) {
+                for (int i = 0; i < n; ++i) {
+                    const double *rowp = Aroot + (size_t)i*(size_t)n + s;
+                    memcpy(cols + (size_t)i*(size_t)c, rowp, (size_t)c*sizeof(double));
+                }
+            } else {
+                double *buf = (double*)malloc((size_t)n*(size_t)c*sizeof(double));
+                for (int i = 0; i < n; ++i) {
+                    const double *rowp = Aroot + (size_t)i*(size_t)n + s;
+                    memcpy(buf + (size_t)i*(size_t)c, rowp, (size_t)c*sizeof(double));
+                }
+                MPI_Send(buf, n*c, MPI_DOUBLE, r, 20, MPI_COMM_WORLD);
+                free(buf);
+            }
+        }
+    } else if (cc > 0) {
+        MPI_Recv(cols, n*cc, MPI_DOUBLE, 0, 20, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+    }
+
+    double *y_partial = (double*)calloc((size_t)n, sizeof(double));
+    if (cc > 0) {
+        for (int i = 0; i < n; ++i) {
+            const double *rowc = cols + (size_t)i*(size_t)cc;
+            double s = 0.0;
+            for (int j = 0; j < cc; ++j) s += rowc[j] * x[c0 + j];
+            y_partial[i] = s;
+        }
+    }
+
+    double *y = NULL;
+    if (rank == 0) y = (double*)calloc((size_t)n, sizeof(double));
+    MPI_Reduce(y_partial, y, n, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+
+    double t1 = MPI_Wtime();
+    double t_local = t1 - t0, t_max = 0.0;
+    MPI_Reduce(&t_local, &t_max, 1, MPI_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
+    if (rank == 0) printf(" | %.13lf", t_max);
+
+    free(cols); free(y_partial);
+    if (rank == 0) free(y);
+}
+
+static void block(int n, double *Aroot, double *x) {
+    MPI_Barrier(MPI_COMM_WORLD);
+    double t0 = MPI_Wtime();
+
+    int rank, size;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+
+    int c0, cc; split_1d(n, rank, size, &c0, &cc);
+
+    int B = 512;
+    if (B > cc) B = cc;
+
+    double *cols = (cc > 0) ? (double*)malloc((size_t)n*(size_t)cc*sizeof(double)) : NULL;
+
+    if (rank == 0) {
+        for (int r = 0; r < size; ++r) {
+            int s, c; split_1d(n, r, size, &s, &c);
+            if (c <= 0) continue;
+
+            if (r == 0) {
+                for (int i = 0; i < n; ++i) {
+                    const double *rowp = Aroot + (size_t)i*(size_t)n + s;
+                    memcpy(cols + (size_t)i*(size_t)c, rowp, (size_t)c*sizeof(double));
+                }
+            } else {
+                double *buf = (double*)malloc((size_t)n*(size_t)c*sizeof(double));
+                for (int i = 0; i < n; ++i) {
+                    const double *rowp = Aroot + (size_t)i*(size_t)n + s;
+                    memcpy(buf + (size_t)i*(size_t)c, rowp, (size_t)c*sizeof(double));
+                }
+                MPI_Send(buf, n*c, MPI_DOUBLE, r, 30, MPI_COMM_WORLD);
+                free(buf);
+            }
+        }
+    } else if (cc > 0) {
+        MPI_Recv(cols, n*cc, MPI_DOUBLE, 0, 30, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+    }
+
+    double *y_partial = (double*)calloc((size_t)n, sizeof(double));
+    if (cc > 0) {
+        for (int jb = 0; jb < cc; jb += B) {
+            int w = (jb + B <= cc) ? B : (cc - jb);
+            const double *xseg = x + c0 + jb;
+            for (int i = 0; i < n; ++i) {
+                const double *rowc = cols + (size_t)i*(size_t)cc + jb;
+                double s = 0.0;
+                for (int j = 0; j < w; ++j) s += rowc[j] * xseg[j];
+                y_partial[i] += s;
+            }
+        }
+    }
+
+    double *y = NULL;
+    if (rank == 0) y = (double*)calloc((size_t)n, sizeof(double));
+    MPI_Reduce(y_partial, y, n, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+
+    double t1 = MPI_Wtime();
+    double t_local = t1 - t0, t_max = 0.0;
+    MPI_Reduce(&t_local, &t_max, 1, MPI_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
+    if (rank == 0) printf(" | %.13lf\n", t_max);
+
+    free(cols); free(y_partial);
+    if (rank == 0) free(y);
+}
 
 int runTask2() {
-    int rank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-
-    srand(time(NULL) + rank);
+    int rank; MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    srand((unsigned int)(time(NULL) + rank));
 
     if (rank == 0)
         printf("  Size |   Row Time (s)  | Column Time (s) | Block Time (s)\n");
 
-    for (int n = 0; n <= 15000; n += 500) {
-        double *matrix = NULL;
-        double *vector = NULL;
+    for (int n = 0; n <= 20000; n += 500) {
+        double *A = NULL;
+        double *x = NULL;
+
         if (rank == 0) {
-            matrix = generate_matrix(n);
-            vector = generate_vector(n);
+            A = generate_matrix(n);
+            x = generate_vector(n);
         } else {
-            matrix = (double*)calloc(n * n, sizeof(double));
-            vector = (double*)calloc(n, sizeof(double));
+            x = (double*)calloc((size_t)n, sizeof(double));
         }
 
-        MPI_Bcast(matrix, n*n, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-        MPI_Bcast(vector, n, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+        // Вектор нужен всем
+        MPI_Bcast(x, n, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
-        row(n, matrix, vector);
-        column(n, matrix, vector);
-        block(n, matrix, vector);
+        row(n, A, x);
+        column(n, A, x);
+        block(n, A, x);
 
-        if (matrix) free(matrix);
-        free(vector);
+        if (rank == 0) free(A);
+        free(x);
     }
     return 0;
-}
-
-void row(int n, double *matrix, double *vector) {
-    MPI_Barrier(MPI_COMM_WORLD);
-    double t0 = MPI_Wtime();
-
-    int rank, size;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    MPI_Comm_size(MPI_COMM_WORLD, &size);
-
-    int base = n / size, rem = n % size;
-    int start = rank * base + (rank < rem ? rank : rem);
-    int count = base + (rank < rem);
-
-    double *local_matrix = (double*)calloc(count * n, sizeof(double));
-    double *local_result = (double*)calloc(count, sizeof(double));
-
-    if (rank == 0) {
-        for (int r = 0; r < size; ++r) {
-            int s = r * base + (r < rem ? r : rem);
-            int c = base + (r < rem);
-            if (r == 0) {
-                for (int i = 0; i < c * n; ++i)
-                    local_matrix[i] = matrix[i];
-            } else {
-                MPI_Send(matrix + s * n, c * n, MPI_DOUBLE, r, 0, MPI_COMM_WORLD);
-            }
-        }
-    } else {
-        MPI_Recv(local_matrix, count * n, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-    }
-
-    for (int i = 0; i < count; ++i) {
-        local_result[i] = 0.0;
-        for (int j = 0; j < n; ++j)
-            local_result[i] += local_matrix[i * n + j] * vector[j];
-    }
-
-    double *result = NULL;
-    int *recvcounts = NULL, *displs = NULL;
-    if (rank == 0) {
-        result = (double*)calloc(n, sizeof(double));
-        recvcounts = (int*)calloc(size, sizeof(int));
-        displs = (int*)calloc(size, sizeof(int));
-        for (int r = 0, pos = 0; r < size; ++r) {
-            int c = base + (r < rem);
-            recvcounts[r] = c;
-            displs[r] = pos;
-            pos += c;
-        }
-    }
-
-    MPI_Gatherv(local_result, count, MPI_DOUBLE,
-                result, recvcounts, displs, MPI_DOUBLE,
-                0, MPI_COMM_WORLD);
-
-
-    double t1 = MPI_Wtime();
-    if (rank == 0)
-        printf("%6d | %.13lf", n, t1 - t0);
-
-    free(local_matrix);
-    free(local_result);
-    if (rank == 0) {
-        free(result);
-        free(recvcounts);
-        free(displs);
-    }
-}
-
-
-void column(int n, double *matrix, double *vector) {
-    MPI_Barrier(MPI_COMM_WORLD);
-    double t0 = MPI_Wtime();
-
-    int rank, size;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    MPI_Comm_size(MPI_COMM_WORLD, &size);
-
-    int base = n / size, rem = n % size;
-    int col_start = rank * base + (rank < rem ? rank : rem);
-    int col_count = base + (rank < rem);
-
-    double *local_result = (double*)calloc(n, sizeof(double));
-
-    for (int col = col_start; col < col_start + col_count; ++col) {
-        for (int row = 0; row < n; ++row) {
-            local_result[row] += matrix[row * n + col] * vector[col];
-        }
-    }
-
-    double *result = NULL;
-    if (rank == 0) result = (double*)calloc(n, sizeof(double));
-
-    MPI_Reduce(local_result, result, n, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
-
-    double t1 = MPI_Wtime();
-
-    if (rank == 0)
-        printf(" | %.13lf", t1 - t0);
-
-    free(local_result);
-    if (rank == 0)
-        free(result);
-}
-
-void block(int n, double *matrix, double *vector) {
-    MPI_Barrier(MPI_COMM_WORLD);
-    double t0 = MPI_Wtime();
-
-    int rank, size;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    MPI_Comm_size(MPI_COMM_WORLD, &size);
-    
-    int B = 256;
-    if (n > 0 && B > n) B = n;
-
-    double *local_result = (double*)calloc(n, sizeof(double));
-
-    int block_idx = 0;
-    for (int jb = 0; jb < n; jb += B, ++block_idx) {
-        if ((block_idx % size) == rank) {
-            int width = (jb + B <= n) ? B : (n - jb);
-
-            for (int i = 0; i < n; ++i) {
-                const double *row = matrix + i * n + jb;
-                double s = 0.0;
-                for (int j = 0; j < width; ++j) {
-                    s += row[j] * vector[jb + j];
-                }
-                local_result[i] += s;
-            }
-        }
-    }
-
-    double *result = NULL;
-    if (rank == 0) result = (double*)calloc(n, sizeof(double));
-    MPI_Reduce(local_result, result, n, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
-
-    double t1 = MPI_Wtime();
-    if (rank == 0)
-        printf(" | %.13lf\n", t1 - t0);
-
-    free(local_result);
-    if (rank == 0) free(result);
 }
