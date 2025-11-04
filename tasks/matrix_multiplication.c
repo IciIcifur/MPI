@@ -2,6 +2,7 @@
 #include <mpi.h>
 #include <stdlib.h>
 #include <time.h>
+#include <math.h>
 
 double *generate_matrix(int n) {
     double *matrix = (double*)calloc(n * n, sizeof(double));
@@ -28,9 +29,9 @@ int runTask2() {
     srand(time(NULL) + rank);
 
     if (rank == 0)
-        printf("  Size |   Row Time (s)  | Column Time (s) |  Block Time (s)\n");
+        printf("  Size |   Row Time (s)  | Column Time (s) | Block Time (s)\n");
 
-    for (int n = 0; n <= 20000; n += 500) {
+    for (int n = 0; n <= 15000; n += 500) {
         double *matrix = NULL;
         double *vector = NULL;
         if (rank == 0) {
@@ -46,7 +47,7 @@ int runTask2() {
 
         row(n, matrix, vector);
         column(n, matrix, vector);
-        // block(n, matrix, vector);
+        block(n, matrix, vector);
 
         if (matrix) free(matrix);
         free(vector);
@@ -151,9 +152,50 @@ void column(int n, double *matrix, double *vector) {
     double t1 = MPI_Wtime();
 
     if (rank == 0)
-        printf(" | %.13lf\n", t1 - t0);
+        printf(" | %.13lf", t1 - t0);
 
     free(local_result);
     if (rank == 0)
         free(result);
+}
+
+void block(int n, double *matrix, double *vector) {
+    MPI_Barrier(MPI_COMM_WORLD);
+    double t0 = MPI_Wtime();
+
+    int rank, size;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+    
+    int B = 256;
+    if (n > 0 && B > n) B = n;
+
+    double *local_result = (double*)calloc(n, sizeof(double));
+
+    int block_idx = 0;
+    for (int jb = 0; jb < n; jb += B, ++block_idx) {
+        if ((block_idx % size) == rank) {
+            int width = (jb + B <= n) ? B : (n - jb);
+
+            for (int i = 0; i < n; ++i) {
+                const double *row = matrix + i * n + jb;
+                double s = 0.0;
+                for (int j = 0; j < width; ++j) {
+                    s += row[j] * vector[jb + j];
+                }
+                local_result[i] += s;
+            }
+        }
+    }
+
+    double *result = NULL;
+    if (rank == 0) result = (double*)calloc(n, sizeof(double));
+    MPI_Reduce(local_result, result, n, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+
+    double t1 = MPI_Wtime();
+    if (rank == 0)
+        printf(" | %.13lf\n", t1 - t0);
+
+    free(local_result);
+    if (rank == 0) free(result);
 }
