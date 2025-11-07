@@ -1,37 +1,9 @@
 #include <stdio.h>
 #include "tasks/tasks.h"
 #include <mpi.h>
+#include <stdlib.h>
 
-int runTask(int taskNumber);
-
-int main(int argc, char *argv[]) {
-    int rank;
-    int selectedTask = 0;
-
-    MPI_Init(&argc, &argv);
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-
-    if (rank == 0) {
-        printf("LAB 1\n");
-        printf("Enter task number:\n1 - Finding PI\n2 - Matrix Multiplication\n3 - Cannon's Matrix Multiplication\n");
-
-        while (selectedTask < 1 || selectedTask > 3) {
-            scanf("%d",&selectedTask);
-            if (0 < selectedTask && selectedTask <= 3) {
-                printf("-------------Task %d---------------\n\n", selectedTask);
-                break;
-            }
-            printf("No such task\n");
-        }
-
-    }
-
-    MPI_Bcast(&selectedTask, 1, MPI_INT, 0, MPI_COMM_WORLD);
-    runTask(selectedTask);
-
-    MPI_Finalize();
-    return 0;
-}
+int requested_matrix_size = -1;
 
 int runTask(int taskNumber) {
     switch (taskNumber) {
@@ -40,9 +12,57 @@ int runTask(int taskNumber) {
         case 2:
             return runTask2();
         case 3:
-            return runTask3();
-        default:
-           break;
+            runTask3();
+            return 0;
+        default: {
+            int rank;
+            MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+            if (rank == 0) {
+                printf("Invalid task number: %d\n", taskNumber);
+            }
+        }
+            break;
     }
+    return 0;
+}
+
+int main(int argc, char *argv[]) {
+    int rank;
+    int selectedTask = 0;
+
+    MPI_Init(&argc, &argv);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
+    if (argc > 1) {
+        selectedTask = atoi(argv[1]);
+    } else if (rank == 0) {
+        printf("LAB 1\n");
+        printf("Enter task number:\n1 - Finding PI\n2 - Matrix Multiplication\n3 - Cannon's Matrix Multiplication\n");
+
+        while (selectedTask != 1) {
+            scanf("%d", &selectedTask);
+            if (selectedTask == 1) {
+                printf("-------------Task %d---------------\n\n", selectedTask);
+                break;
+            }
+            printf("No such task\n");
+        }
+    }
+
+    if (argc > 2) {
+        requested_matrix_size = atoi(argv[2]);
+        if (requested_matrix_size <= 0) requested_matrix_size = -1;
+    }
+
+    MPI_Bcast(&selectedTask, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Bcast(&requested_matrix_size, 1, MPI_INT, 0, MPI_COMM_WORLD);
+
+    if (selectedTask == 1 || selectedTask == 2 || selectedTask == 3) {
+        runTask(selectedTask);
+    } else {
+        if (rank == 0) printf("No such task\n");
+    }
+
+    MPI_Finalize();
     return 0;
 }

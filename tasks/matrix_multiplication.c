@@ -4,6 +4,8 @@
 #include <time.h>
 #include <string.h>
 
+extern int requested_matrix_size;
+
 static double *generate_matrix(int n) {
     double *a = (double*)calloc((size_t)n*(size_t)n, sizeof(double));
     for (int i = 0; i < n*n; ++i) a[i] = (double)rand() / RAND_MAX;
@@ -72,7 +74,7 @@ static void row(int n, double *Aroot, double *x) {
     double t1 = MPI_Wtime();
     double t_local = t1 - t0, t_max = 0.0;
     MPI_Reduce(&t_local, &t_max, 1, MPI_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
-    if (rank == 0) printf("%6d | %.13lf", n, t_max);
+    if (rank == 0) printf("ROW|%d|%.13lf\n", n, t_max);
 
     free(A); free(y_local);
     if (rank == 0) { free(y); free(counts); free(displs); }
@@ -131,7 +133,7 @@ static void column(int n, double *Aroot, double *x) {
     double t1 = MPI_Wtime();
     double t_local = t1 - t0, t_max = 0.0;
     MPI_Reduce(&t_local, &t_max, 1, MPI_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
-    if (rank == 0) printf(" | %.13lf", t_max);
+    if (rank == 0) printf("COLUMN|%d|%.13lf\n", n, t_max);
 
     free(cols); free(y_partial);
     if (rank == 0) free(y);
@@ -197,7 +199,7 @@ static void block(int n, double *Aroot, double *x) {
     double t1 = MPI_Wtime();
     double t_local = t1 - t0, t_max = 0.0;
     MPI_Reduce(&t_local, &t_max, 1, MPI_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
-    if (rank == 0) printf(" | %.13lf\n", t_max);
+    if (rank == 0) printf("BLOCK|%d|%.13lf\n", n, t_max);
 
     free(cols); free(y_partial);
     if (rank == 0) free(y);
@@ -210,7 +212,9 @@ int runTask2() {
     if (rank == 0)
         printf("  Size |   Row Time (s)  | Column Time (s) | Block Time (s)\n");
 
-    for (int n = 0; n <= 20000; n += 500) {
+    // Если задан конкретный размер - выполняем только его
+    if (requested_matrix_size > 0) {
+        int n = requested_matrix_size;
         double *A = NULL;
         double *x = NULL;
 
@@ -221,7 +225,28 @@ int runTask2() {
             x = (double*)calloc((size_t)n, sizeof(double));
         }
 
-        // Вектор нужен всем
+        MPI_Bcast(x, n, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+
+        row(n, A, x);
+        column(n, A, x);
+        block(n, A, x);
+
+        if (rank == 0) free(A);
+        free(x);
+        return 0;
+    }
+
+    for (int n = 500; n <= 20000; n += 500) {
+        double *A = NULL;
+        double *x = NULL;
+
+        if (rank == 0) {
+            A = generate_matrix(n);
+            x = generate_vector(n);
+        } else {
+            x = (double*)calloc((size_t)n, sizeof(double));
+        }
+
         MPI_Bcast(x, n, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
         row(n, A, x);

@@ -81,15 +81,17 @@ void runTask3() {
     const int N_max = 2048;
     const double growth = pow((double)N_max / N_min, 1.0 / (num_sizes - 1));
     int *sizes = malloc(num_sizes * sizeof(int));
+
+    const int L = 12;
     for (int i = 0; i < num_sizes; ++i) {
         int Ni = (int)(N_min * pow(growth, i) + 0.5);
-        Ni = (Ni + sqrtP - 1) / sqrtP * sqrtP;
+        Ni = (Ni + L - 1) / L * L;
         sizes[i] = Ni;
     }
 
     if (world_rank == 0) {
-        printf("Size  | Processes | AvgTime(s)  | Speedup | Efficiency(%%)| Check\n");
-        printf("-----------------------------------------------------------------\n");
+        printf("Size  | Processes | SeqTime(s)  | AvgTime(s)  | Speedup | Efficiency(%%) | Check\n");
+        printf("-------------------------------------------------------------------------------\n");
     }
 
     for (int sidx = 0; sidx < num_sizes; ++sidx) {
@@ -198,7 +200,19 @@ void runTask3() {
                 const double seq_t1 = MPI_Wtime();
                 seq_total += (seq_t1 - seq_t0);
             }
-            const double seq_time = seq_total / iterations;
+            const double seq_time_actual = seq_total / iterations;
+
+            double speedup = 0.0;
+            double efficiency = 0.0;
+            if (par_time > 0.0) {
+                speedup = seq_time_actual / par_time;
+                efficiency = (speedup / (double)world_size) * 100.0;
+            }
+
+            if (world_size == 1) {
+                speedup = 1.0;
+                efficiency = 100.0;
+            }
 
             double *recvC = xmalloc(world_size * block_elems * sizeof(double));
             MPI_Gather(C, block_elems, MPI_DOUBLE, recvC, block_elems, MPI_DOUBLE, 0, MPI_COMM_WORLD);
@@ -216,11 +230,7 @@ void runTask3() {
             }
             const double rel = max_abs_diff / (max_ref > 0.0 ? max_ref : 1.0);
             const double eps = 1e-8;
-
-            const double speedup = seq_time / par_time;
-            const double efficiency = speedup / (double)world_size * 100.0;
-
-            printf("%5d | %9d | %11.6f | %7.3f | %12.2f | ", N, world_size, par_time, speedup, efficiency);
+            printf("%5d | %9d | %11.6f | %11.6f | %7.3f | %12.2f | ", N, world_size, seq_time_actual, par_time, speedup, efficiency);
             if (max_abs_diff > eps && rel > eps) {
                 printf("Mismatch (abs=%e rel=%e)\n", max_abs_diff, rel);
             } else {
