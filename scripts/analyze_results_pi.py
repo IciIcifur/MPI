@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
 Analysis script for PI calculation benchmark results.
-Generates graphs and statistical analysis.
 """
 
 import os
 import csv
 import sys
+import math
 import numpy as np
 import matplotlib.pyplot as plt
 from collections import defaultdict
@@ -56,24 +56,47 @@ def load_results():
             exec_time = float(row['execution_time'])
             data[algo][iterations]['execution_times'][processes].append(exec_time)
 
-            pi_val = float(row['pi_value'])
-            data[algo][iterations]['pi_values'][processes].append(pi_val)
+            try:
+                pi_val = float(row['pi_value'])
+                data[algo][iterations]['pi_values'][processes].append(pi_val)
+            except Exception:
+                pass
 
-            if row['speedup'] and row['speedup'].strip():
+            if row.get('speedup') and row['speedup'].strip():
                 try:
                     speedup = float(row['speedup'])
                     data[algo][iterations]['speedups'][processes].append(speedup)
                 except ValueError:
                     pass
 
-            if row['efficiency'] and row['efficiency'].strip():
+            if row.get('efficiency') and row['efficiency'].strip():
                 try:
                     efficiency = float(row['efficiency'])
                     data[algo][iterations]['efficiencies'][processes].append(efficiency)
                 except ValueError:
                     pass
 
+            if processes == 1:
+                if not data[algo][iterations]['speedups'][processes]:
+                    data[algo][iterations]['speedups'][processes].append(1.0)
+                if not data[algo][iterations]['efficiencies'][processes]:
+                    data[algo][iterations]['efficiencies'][processes].append(100.0)
+
     return data
+
+def compute_precision_digits(abs_error):
+    """Return estimated correct decimal digits given absolute error."""
+    if abs_error <= 0.0:
+        return ">=15"
+    if abs_error >= 1.0:
+        return 0
+    try:
+        digits = int(math.floor(-math.log10(abs_error)))
+        if digits < 0:
+            digits = 0
+        return digits
+    except Exception:
+        return 0
 
 def plot_execution_time(data):
     """Plot execution time vs number of processes."""
@@ -190,24 +213,44 @@ def print_statistics(data):
             print(f"\n  {iterations:,} iterations:")
 
             iterations_data = data[algo][iterations]
+
+            for processes in sorted(iterations_data['pi_values'].keys()):
+                pi_vals = iterations_data['pi_values'][processes]
+                if not pi_vals:
+                    continue
+                avg_pi = float(np.mean(pi_vals))
+                std_pi = float(np.std(pi_vals))
+                abs_err = abs(avg_pi - math.pi)
+                rel_err_pct = (abs_err / math.pi) * 100.0 if math.pi != 0 else float('inf')
+                digits = compute_precision_digits(abs_err)
+
+                if std_pi > 0:
+                    pi_str = f"{avg_pi:.15f} (±{std_pi:.15f})"
+                else:
+                    pi_str = f"{avg_pi:.15f}"
+
+                print(f"    [{processes} proc] Pi: {pi_str} | Abs err={abs_err:.15g} | Rel err={rel_err_pct:.6f}% | Prec ≈ {digits} dec. digits")
+
             for processes in sorted(iterations_data['execution_times'].keys()):
                 times = iterations_data['execution_times'][processes]
                 avg_time = np.mean(times)
                 std_time = np.std(times)
 
-                if processes == 1:
-                    print(f"    {processes} process: {avg_time:.6f}s (±{std_time:.6f}s)")
+                if std_time > 0:
+                    time_str = f"{avg_time:.6f}s (±{std_time:.6f}s)"
                 else:
-                    speedups = iterations_data['speedups'].get(processes, [])
-                    efficiencies = iterations_data['efficiencies'].get(processes, [])
+                    time_str = f"{avg_time:.6f}s"
 
-                    if speedups and efficiencies:
-                        avg_speedup = np.mean(speedups)
-                        avg_efficiency = np.mean(efficiencies)
-                        print(f"    {processes} processes: {avg_time:.6f}s (±{std_time:.6f}s), "
-                              f"Speedup: {avg_speedup:.4f}x, Efficiency: {avg_efficiency:.2f}%")
-                    else:
-                        print(f"    {processes} processes: {avg_time:.6f}s (±{std_time:.6f}s)")
+                speedups = iterations_data['speedups'].get(processes, [])
+                efficiencies = iterations_data['efficiencies'].get(processes, [])
+
+                if speedups and efficiencies:
+                    avg_speedup = np.mean(speedups)
+                    avg_efficiency = np.mean(efficiencies)
+                    print(f"    {processes} process{'es' if processes>1 else ''}: {time_str}, "
+                          f"Speedup: {avg_speedup:.4f}x, Efficiency: {avg_efficiency:.2f}%")
+                else:
+                    print(f"    {processes} process{'es' if processes>1 else ''}: {time_str}")
 
 def plot_comparison_summary(data):
     """Create a summary comparison plot for all algorithms."""
@@ -273,7 +316,6 @@ def plot_comparison_summary(data):
     ax.set_ylim([0, 120])
 
     ax = axes[1, 1]
-    import math
     for algo in data.keys():
         pi_errors = []
         for iterations in iterations_list:
@@ -299,7 +341,7 @@ def plot_comparison_summary(data):
     print(f"Saved: {RESULTS_DIR}/comparison_summary.png")
 
 def save_statistics_to_file(data):
-    """Save detailed statistics to a text file."""
+    """Save detailed statistics to a text file, including pi estimates and precision."""
     stats_file = f'{RESULTS_DIR}/statistics.txt'
 
     with open(stats_file, 'w') as f:
@@ -319,24 +361,43 @@ def save_statistics_to_file(data):
                 f.write(f"\n{iterations:,} iterations:\n")
 
                 iterations_data = data[algo][iterations]
+
+                for processes in sorted(iterations_data['pi_values'].keys()):
+                    pi_vals = iterations_data['pi_values'][processes]
+                    if not pi_vals:
+                        continue
+                    avg_pi = float(np.mean(pi_vals))
+                    std_pi = float(np.std(pi_vals))
+                    abs_err = abs(avg_pi - math.pi)
+                    rel_err_pct = (abs_err / math.pi) * 100.0 if math.pi != 0 else float('inf')
+                    digits = compute_precision_digits(abs_err)
+
+                    if std_pi > 0:
+                        pi_str = f"{avg_pi:.15f} (±{std_pi:.15f})"
+                    else:
+                        pi_str = f"{avg_pi:.15f}"
+
+                    f.write(f"  [{processes} proc] Pi: {pi_str} | Abs err={abs_err:.15g} | Rel err={rel_err_pct:.6f}% | Prec ≈ {digits} dec. digits\n")
+
                 for processes in sorted(iterations_data['execution_times'].keys()):
                     times = iterations_data['execution_times'][processes]
                     avg_time = np.mean(times)
                     std_time = np.std(times)
 
-                    if processes == 1:
-                        f.write(f"  {processes} process: {avg_time:.6f}s (±{std_time:.6f}s)\n")
+                    if std_time > 0:
+                        time_str = f"{avg_time:.6f}s (±{std_time:.6f}s)"
                     else:
-                        speedups = iterations_data['speedups'].get(processes, [])
-                        efficiencies = iterations_data['efficiencies'].get(processes, [])
+                        time_str = f"{avg_time:.6f}s"
 
-                        if speedups and efficiencies:
-                            avg_speedup = np.mean(speedups)
-                            avg_efficiency = np.mean(efficiencies)
-                            f.write(f"  {processes} processes: {avg_time:.6f}s (±{std_time:.6f}s), "
-                                    f"Speedup: {avg_speedup:.4f}x, Efficiency: {avg_efficiency:.2f}%\n")
-                        else:
-                            f.write(f"  {processes} processes: {avg_time:.6f}s (±{std_time:.6f}s)\n")
+                    speedups = iterations_data['speedups'].get(processes, [])
+                    efficiencies = iterations_data['efficiencies'].get(processes, [])
+
+                    if speedups and efficiencies:
+                        avg_speedup = np.mean(speedups)
+                        avg_efficiency = np.mean(efficiencies)
+                        f.write(f"  {processes} processes: {time_str}, Speedup: {avg_speedup:.4f}x, Efficiency: {avg_efficiency:.2f}%\n")
+                    else:
+                        f.write(f"  {processes} processes: {time_str}\n")
 
             f.write("\n" + "=" * 70 + "\n\n")
 

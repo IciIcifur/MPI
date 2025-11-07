@@ -45,7 +45,10 @@ def build_project():
     result = subprocess.run(["make"], capture_output=True)
     if result.returncode != 0:
         print("Build failed!")
-        print(result.stderr.decode())
+        try:
+            print(result.stderr.decode())
+        except Exception:
+            print(result.stderr)
         sys.exit(1)
     print("Build successful!")
 
@@ -79,8 +82,11 @@ def run_test(num_processes, iterations):
                 parts = line.split('|')
                 if len(parts) == 3:
                     algo = parts[0].strip()
-                    pi_value = float(parts[1].strip())
-                    exec_time = float(parts[2].strip())
+                    try:
+                        pi_value = float(parts[1].strip())
+                        exec_time = float(parts[2].strip())
+                    except Exception:
+                        continue
                     results[algo] = {
                         'pi_value': pi_value,
                         'execution_time': exec_time
@@ -153,17 +159,17 @@ def main():
 
                     if num_processes == 1:
                         single_thread_times[(algo, iterations)] = exec_time
-
-                    speedup = None
-                    efficiency = None
-                    if num_processes > 1:
+                        speedup = 1.0
+                        efficiency = 100.0
+                    else:
                         key = (algo, iterations)
                         if key in single_thread_times:
-                            s, e = calculate_metrics(
-                                single_thread_times[key], exec_time, num_processes,
-                            )
+                            s, e = calculate_metrics(single_thread_times[key], exec_time, num_processes)
                             speedup = s
                             efficiency = e
+                        else:
+                            speedup = None
+                            efficiency = None
 
                     row = {
                         'timestamp': timestamp,
@@ -176,11 +182,15 @@ def main():
                         'efficiency': f"{efficiency:.4f}" if efficiency is not None else ""
                     }
 
+                    if num_processes == 1:
+                        row['speedup'] = "1.0000"
+                        row['efficiency'] = "100.0000"
+
                     writer.writerow(row)
                     csvfile.flush()
 
-                    if speedup is not None and efficiency is not None:
-                        print(f"  {algo:10} | π={pi_val:.10f} | Time={exec_time:.6f}s | Speedup={speedup:.4f} | Eff={efficiency:.4f}%")
+                    if row['speedup'] and row['efficiency']:
+                        print(f"  {algo:10} | π={pi_val:.10f} | Time={exec_time:.6f}s | Speedup={row['speedup']} | Eff={row['efficiency']}%")
                     else:
                         print(f"  {algo:10} | π={pi_val:.10f} | Time={exec_time:.6f}s")
 
