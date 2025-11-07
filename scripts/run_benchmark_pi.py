@@ -14,18 +14,33 @@ RESULTS_FILE = os.path.join(RESULTS_DIR, "pi_results.csv")
 EXECUTABLE = "bin/pi_calculator"
 
 TEST_CONFIGS = [
-    (1, 1000000),      # 1 process, 1M iterations
-    (1, 10000000),     # 1 process, 10M iterations
-    (1, 100000000),    # 1 process, 100M iterations
-    (2, 1000000),      # 2 processes, 1M iterations
-    (2, 10000000),     # 2 processes, 10M iterations
-    (2, 100000000),    # 2 processes, 100M iterations
-    (4, 1000000),      # 4 processes, 1M iterations
-    (4, 10000000),     # 4 processes, 10M iterations
-    (4, 100000000),    # 4 processes, 100M iterations
-    (8, 1000000),      # 8 processes, 1M iterations
-    (8, 10000000),     # 8 processes, 10M iterations
-    (8, 100000000),    # 8 processes, 100M iterations
+    # 1 процесс
+    (1, 1000000),      # 1M iterations
+    (1, 5000000),      # 5M iterations
+    (1, 10000000),     # 10M iterations
+    (1, 50000000),     # 50M iterations
+    (1, 100000000),    # 100M iterations
+
+    # 2 процесса
+    (2, 1000000),
+    (2, 5000000),
+    (2, 10000000),
+    (2, 50000000),
+    (2, 100000000),
+
+    # 4 процесса
+    (4, 1000000),
+    (4, 5000000),
+    (4, 10000000),
+    (4, 50000000),
+    (4, 100000000),
+
+    # 8 процессов
+    (8, 1000000),
+    (8, 5000000),
+    (8, 10000000),
+    (8, 50000000),
+    (8, 100000000),
 ]
 
 ALGORITHMS = ["NAIVE", "MANUAL", "GATHER"]

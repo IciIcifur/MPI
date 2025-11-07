@@ -100,12 +100,12 @@ def compute_precision_digits(abs_error):
 
 def plot_execution_time(data):
     """Plot execution time vs number of processes."""
-    fig, axes = plt.subplots(1, 3, figsize=(15, 4))
+    fig, axes = plt.subplots(2, 3, figsize=(18, 10))
 
-    iterations_list = [1000000, 10000000, 100000000]
+    iterations_list = [1000000, 5000000, 10000000, 50000000, 100000000]
 
     for idx, iterations in enumerate(iterations_list):
-        ax = axes[idx]
+        ax = axes[idx // 3, idx % 3]
 
         for algo in data.keys():
             if iterations not in data[algo]:
@@ -129,12 +129,12 @@ def plot_execution_time(data):
 
 def plot_speedup(data):
     """Plot speedup vs number of processes."""
-    fig, axes = plt.subplots(1, 3, figsize=(15, 4))
+    fig, axes = plt.subplots(2, 3, figsize=(18, 10))
 
-    iterations_list = [1000000, 10000000, 100000000]
+    iterations_list = [1000000, 5000000, 10000000, 50000000, 100000000]
 
     for idx, iterations in enumerate(iterations_list):
-        ax = axes[idx]
+        ax = axes[idx // 3, idx % 3]
 
         for algo in data.keys():
             if iterations not in data[algo]:
@@ -164,12 +164,12 @@ def plot_speedup(data):
 
 def plot_efficiency(data):
     """Plot efficiency vs number of processes."""
-    fig, axes = plt.subplots(1, 3, figsize=(15, 4))
+    fig, axes = plt.subplots(2, 3, figsize=(18, 10))
 
-    iterations_list = [1000000, 10000000, 100000000]
+    iterations_list = [1000000, 5000000, 10000000, 50000000, 100000000]
 
     for idx, iterations in enumerate(iterations_list):
-        ax = axes[idx]
+        ax = axes[idx // 3, idx % 3]
 
         for algo in data.keys():
             if iterations not in data[algo]:
@@ -200,7 +200,7 @@ def print_statistics(data):
     print("STATISTICAL ANALYSIS")
     print("=" * 70)
 
-    iterations_list = [1000000, 10000000, 100000000]
+    iterations_list = [1000000, 5000000, 10000000, 50000000, 100000000]
 
     for algo in sorted(data.keys()):
         print(f"\n{algo} Algorithm:")
@@ -256,7 +256,7 @@ def plot_comparison_summary(data):
     """Create a summary comparison plot for all algorithms."""
     fig, axes = plt.subplots(2, 2, figsize=(12, 10))
 
-    iterations_list = [1000000, 10000000, 100000000]
+    iterations_list = [1000000, 5000000, 10000000, 50000000, 100000000]
 
     ax = axes[0, 0]
     for algo in data.keys():
@@ -268,8 +268,15 @@ def plot_comparison_summary(data):
                     avg_times.append(np.mean(times_1proc))
 
         if avg_times:
-            ax.plot([f"{it//1000000}M" for it in iterations_list], avg_times,
-                    marker='o', label=algo, linewidth=2)
+            # Форматируем метки для оси X
+            labels = []
+            for it in iterations_list:
+                if it >= 1000000:
+                    labels.append(f"{it//1000000}M")
+                else:
+                    labels.append(f"{it//1000}K")
+
+            ax.plot(labels, avg_times, marker='o', label=algo, linewidth=2)
 
     ax.set_xlabel('Number of Iterations')
     ax.set_ylabel('Execution Time (seconds)')
@@ -327,8 +334,14 @@ def plot_comparison_summary(data):
                     pi_errors.append(error)
 
         if pi_errors:
-            ax.plot([f"{it//1000000}M" for it in iterations_list], pi_errors,
-                    marker='o', label=algo, linewidth=2)
+            labels = []
+            for it in iterations_list:
+                if it >= 1000000:
+                    labels.append(f"{it//1000000}M")
+                else:
+                    labels.append(f"{it//1000}K")
+
+            ax.plot(labels, pi_errors, marker='o', label=algo, linewidth=2)
 
     ax.set_xlabel('Number of Iterations')
     ax.set_ylabel('Relative Error (%)')
@@ -348,7 +361,7 @@ def save_statistics_to_file(data):
         f.write("PI CALCULATION BENCHMARK - STATISTICAL ANALYSIS\n")
         f.write("=" * 70 + "\n\n")
 
-        iterations_list = [1000000, 10000000, 100000000]
+        iterations_list = [1000000, 5000000, 10000000, 50000000, 100000000]
 
         for algo in sorted(data.keys()):
             f.write(f"{algo} Algorithm:\n")

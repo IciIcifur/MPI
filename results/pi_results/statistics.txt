@@ -5,34 +5,54 @@ GATHER Algorithm:
 ----------------------------------------
 
 1,000,000 iterations:
-  [1 proc] Pi: 3.142300000000000 | Abs err=0.000707346410206977 | Rel err=0.022516% | Prec ≈ 3 dec. digits
-  [2 proc] Pi: 3.145424000000000 | Abs err=0.0038313464102071 | Rel err=0.121956% | Prec ≈ 2 dec. digits
-  [4 proc] Pi: 3.141224000000000 | Abs err=0.000368653589793322 | Rel err=0.011735% | Prec ≈ 3 dec. digits
-  [8 proc] Pi: 3.139512000000000 | Abs err=0.00208065358979326 | Rel err=0.066229% | Prec ≈ 2 dec. digits
-  1 processes: 0.025303s, Speedup: 1.0000x, Efficiency: 100.00%
-  2 processes: 0.012484s, Speedup: 2.0268x, Efficiency: 101.34%
-  4 processes: 0.006589s, Speedup: 3.8402x, Efficiency: 96.00%
-  8 processes: 0.005452s, Speedup: 4.6410x, Efficiency: 58.01%
+  [1 proc] Pi: 3.138572000000000 | Abs err=0.0030206535897932 | Rel err=0.096150% | Prec ≈ 2 dec. digits
+  [2 proc] Pi: 3.141980000000000 | Abs err=0.000387346410207101 | Rel err=0.012330% | Prec ≈ 3 dec. digits
+  [4 proc] Pi: 3.143060000000000 | Abs err=0.00146734641020707 | Rel err=0.046707% | Prec ≈ 2 dec. digits
+  [8 proc] Pi: 3.140572000000000 | Abs err=0.00102065358979297 | Rel err=0.032488% | Prec ≈ 2 dec. digits
+  1 processes: 0.025291s, Speedup: 1.0000x, Efficiency: 100.00%
+  2 processes: 0.012835s, Speedup: 1.9705x, Efficiency: 98.52%
+  4 processes: 0.006485s, Speedup: 3.8999x, Efficiency: 97.50%
+  8 processes: 0.006319s, Speedup: 4.0024x, Efficiency: 50.03%
+
+5,000,000 iterations:
+  [1 proc] Pi: 3.140390400000000 | Abs err=0.00120225358979331 | Rel err=0.038269% | Prec ≈ 2 dec. digits
+  [2 proc] Pi: 3.140815200000000 | Abs err=0.000777453589793087 | Rel err=0.024747% | Prec ≈ 3 dec. digits
+  [4 proc] Pi: 3.141860000000000 | Abs err=0.000267346410206759 | Rel err=0.008510% | Prec ≈ 3 dec. digits
+  [8 proc] Pi: 3.141656000000000 | Abs err=6.33464102066661e-05 | Rel err=0.002016% | Prec ≈ 4 dec. digits
+  1 processes: 0.124656s, Speedup: 1.0000x, Efficiency: 100.00%
+  2 processes: 0.065858s, Speedup: 1.8928x, Efficiency: 94.64%
+  4 processes: 0.034895s, Speedup: 3.5723x, Efficiency: 89.31%
+  8 processes: 0.026152s, Speedup: 4.7666x, Efficiency: 59.58%
 
 10,000,000 iterations:
-  [1 proc] Pi: 3.141269200000000 | Abs err=0.000323453589793132 | Rel err=0.010296% | Prec ≈ 3 dec. digits
-  [2 proc] Pi: 3.142266800000000 | Abs err=0.000674146410206689 | Rel err=0.021459% | Prec ≈ 3 dec. digits
-  [4 proc] Pi: 3.141586000000000 | Abs err=6.65358979290431e-06 | Rel err=0.000212% | Prec ≈ 5 dec. digits
-  [8 proc] Pi: 3.142180400000000 | Abs err=0.000587746410206869 | Rel err=0.018709% | Prec ≈ 3 dec. digits
-  1 processes: 0.253624s, Speedup: 1.0000x, Efficiency: 100.00%
-  2 processes: 0.129503s, Speedup: 1.9584x, Efficiency: 97.92%
-  4 processes: 0.102752s, Speedup: 2.4683x, Efficiency: 61.71%
-  8 processes: 0.056622s, Speedup: 4.4792x, Efficiency: 55.99%
+  [1 proc] Pi: 3.140692000000000 | Abs err=0.000900653589793077 | Rel err=0.028669% | Prec ≈ 3 dec. digits
+  [2 proc] Pi: 3.141988400000000 | Abs err=0.000395746410206677 | Rel err=0.012597% | Prec ≈ 3 dec. digits
+  [4 proc] Pi: 3.141661600000000 | Abs err=6.89464102068271e-05 | Rel err=0.002195% | Prec ≈ 4 dec. digits
+  [8 proc] Pi: 3.141535200000000 | Abs err=5.74535897932549e-05 | Rel err=0.001829% | Prec ≈ 4 dec. digits
+  1 processes: 0.252165s, Speedup: 1.0000x, Efficiency: 100.00%
+  2 processes: 0.127616s, Speedup: 1.9760x, Efficiency: 98.80%
+  4 processes: 0.072473s, Speedup: 3.4794x, Efficiency: 86.99%
+  8 processes: 0.052079s, Speedup: 4.8420x, Efficiency: 60.52%
+
+50,000,000 iterations:
+  [1 proc] Pi: 3.141647680000000 | Abs err=5.50264102070486e-05 | Rel err=0.001752% | Prec ≈ 4 dec. digits
+  [2 proc] Pi: 3.141931920000000 | Abs err=0.000339266410207095 | Rel err=0.010799% | Prec ≈ 3 dec. digits
+  [4 proc] Pi: 3.141414080000000 | Abs err=0.000178573589793007 | Rel err=0.005684% | Prec ≈ 3 dec. digits
+  [8 proc] Pi: 3.141602880000000 | Abs err=1.02264102070926e-05 | Rel err=0.000326% | Prec ≈ 4 dec. digits
+  1 processes: 1.363355s, Speedup: 1.0000x, Efficiency: 100.00%
+  2 processes: 0.680882s, Speedup: 2.0023x, Efficiency: 100.12%
+  4 processes: 0.430962s, Speedup: 3.1635x, Efficiency: 79.09%
+  8 processes: 0.271538s, Speedup: 5.0209x, Efficiency: 62.76%
 
 100,000,000 iterations:
-  [1 proc] Pi: 3.141363920000000 | Abs err=0.000228733589793251 | Rel err=0.007281% | Prec ≈ 3 dec. digits
-  [2 proc] Pi: 3.141496960000000 | Abs err=9.5693589793111e-05 | Rel err=0.003046% | Prec ≈ 4 dec. digits
-  [4 proc] Pi: 3.141590800000000 | Abs err=1.85358979321038e-06 | Rel err=0.000059% | Prec ≈ 5 dec. digits
-  [8 proc] Pi: 3.141485960000000 | Abs err=0.000106693589793316 | Rel err=0.003396% | Prec ≈ 3 dec. digits
-  1 processes: 2.523014s, Speedup: 1.0000x, Efficiency: 100.00%
-  2 processes: 1.436507s, Speedup: 1.7564x, Efficiency: 87.82%
-  4 processes: 0.869693s, Speedup: 2.9010x, Efficiency: 72.53%
-  8 processes: 0.542756s, Speedup: 4.6485x, Efficiency: 58.11%
+  [1 proc] Pi: 3.141497360000000 | Abs err=9.52935897933216e-05 | Rel err=0.003033% | Prec ≈ 4 dec. digits
+  [2 proc] Pi: 3.141499960000000 | Abs err=9.26935897931358e-05 | Rel err=0.002951% | Prec ≈ 4 dec. digits
+  [4 proc] Pi: 3.141495720000000 | Abs err=9.69335897931245e-05 | Rel err=0.003085% | Prec ≈ 4 dec. digits
+  [8 proc] Pi: 3.141447680000000 | Abs err=0.000144973589792929 | Rel err=0.004615% | Prec ≈ 3 dec. digits
+  1 processes: 2.576149s, Speedup: 1.0000x, Efficiency: 100.00%
+  2 processes: 1.443237s, Speedup: 1.7850x, Efficiency: 89.25%
+  4 processes: 0.836002s, Speedup: 3.0815x, Efficiency: 77.04%
+  8 processes: 0.497318s, Speedup: 5.1801x, Efficiency: 64.75%
 
 ======================================================================
 
@@ -40,34 +60,54 @@ MANUAL Algorithm:
 ----------------------------------------
 
 1,000,000 iterations:
-  [1 proc] Pi: 3.142532000000000 | Abs err=0.000939346410206987 | Rel err=0.029900% | Prec ≈ 3 dec. digits
-  [2 proc] Pi: 3.145424000000000 | Abs err=0.0038313464102071 | Rel err=0.121956% | Prec ≈ 2 dec. digits
-  [4 proc] Pi: 3.141224000000000 | Abs err=0.000368653589793322 | Rel err=0.011735% | Prec ≈ 3 dec. digits
-  [8 proc] Pi: 3.139512000000000 | Abs err=0.00208065358979326 | Rel err=0.066229% | Prec ≈ 2 dec. digits
-  1 processes: 0.025373s, Speedup: 1.0000x, Efficiency: 100.00%
-  2 processes: 0.012463s, Speedup: 2.0359x, Efficiency: 101.79%
-  4 processes: 0.006775s, Speedup: 3.7451x, Efficiency: 93.63%
-  8 processes: 0.005386s, Speedup: 4.7109x, Efficiency: 58.89%
+  [1 proc] Pi: 3.138572000000000 | Abs err=0.0030206535897932 | Rel err=0.096150% | Prec ≈ 2 dec. digits
+  [2 proc] Pi: 3.141980000000000 | Abs err=0.000387346410207101 | Rel err=0.012330% | Prec ≈ 3 dec. digits
+  [4 proc] Pi: 3.143060000000000 | Abs err=0.00146734641020707 | Rel err=0.046707% | Prec ≈ 2 dec. digits
+  [8 proc] Pi: 3.140572000000000 | Abs err=0.00102065358979297 | Rel err=0.032488% | Prec ≈ 2 dec. digits
+  1 processes: 0.024730s, Speedup: 1.0000x, Efficiency: 100.00%
+  2 processes: 0.012539s, Speedup: 1.9722x, Efficiency: 98.61%
+  4 processes: 0.006761s, Speedup: 3.6577x, Efficiency: 91.44%
+  8 processes: 0.005045s, Speedup: 4.9019x, Efficiency: 61.27%
+
+5,000,000 iterations:
+  [1 proc] Pi: 3.140390400000000 | Abs err=0.00120225358979331 | Rel err=0.038269% | Prec ≈ 2 dec. digits
+  [2 proc] Pi: 3.140815200000000 | Abs err=0.000777453589793087 | Rel err=0.024747% | Prec ≈ 3 dec. digits
+  [4 proc] Pi: 3.141860000000000 | Abs err=0.000267346410206759 | Rel err=0.008510% | Prec ≈ 3 dec. digits
+  [8 proc] Pi: 3.141656000000000 | Abs err=6.33464102066661e-05 | Rel err=0.002016% | Prec ≈ 4 dec. digits
+  1 processes: 0.125581s, Speedup: 1.0000x, Efficiency: 100.00%
+  2 processes: 0.063940s, Speedup: 1.9640x, Efficiency: 98.20%
+  4 processes: 0.036681s, Speedup: 3.4236x, Efficiency: 85.59%
+  8 processes: 0.026934s, Speedup: 4.6625x, Efficiency: 58.28%
 
 10,000,000 iterations:
-  [1 proc] Pi: 3.141269200000000 | Abs err=0.000323453589793132 | Rel err=0.010296% | Prec ≈ 3 dec. digits
-  [2 proc] Pi: 3.142266800000000 | Abs err=0.000674146410206689 | Rel err=0.021459% | Prec ≈ 3 dec. digits
-  [4 proc] Pi: 3.141586000000000 | Abs err=6.65358979290431e-06 | Rel err=0.000212% | Prec ≈ 5 dec. digits
-  [8 proc] Pi: 3.142180400000000 | Abs err=0.000587746410206869 | Rel err=0.018709% | Prec ≈ 3 dec. digits
-  1 processes: 0.254849s, Speedup: 1.0000x, Efficiency: 100.00%
-  2 processes: 0.130356s, Speedup: 1.9550x, Efficiency: 97.75%
-  4 processes: 0.105522s, Speedup: 2.4151x, Efficiency: 60.38%
-  8 processes: 0.060712s, Speedup: 4.1977x, Efficiency: 52.47%
+  [1 proc] Pi: 3.140692000000000 | Abs err=0.000900653589793077 | Rel err=0.028669% | Prec ≈ 3 dec. digits
+  [2 proc] Pi: 3.141988400000000 | Abs err=0.000395746410206677 | Rel err=0.012597% | Prec ≈ 3 dec. digits
+  [4 proc] Pi: 3.141661600000000 | Abs err=6.89464102068271e-05 | Rel err=0.002195% | Prec ≈ 4 dec. digits
+  [8 proc] Pi: 3.141535200000000 | Abs err=5.74535897932549e-05 | Rel err=0.001829% | Prec ≈ 4 dec. digits
+  1 processes: 0.248651s, Speedup: 1.0000x, Efficiency: 100.00%
+  2 processes: 0.128943s, Speedup: 1.9284x, Efficiency: 96.42%
+  4 processes: 0.066292s, Speedup: 3.7508x, Efficiency: 93.77%
+  8 processes: 0.052617s, Speedup: 4.7257x, Efficiency: 59.07%
+
+50,000,000 iterations:
+  [1 proc] Pi: 3.141651440000000 | Abs err=5.87864102068458e-05 | Rel err=0.001871% | Prec ≈ 4 dec. digits
+  [2 proc] Pi: 3.141236720000000 | Abs err=0.000355933589792912 | Rel err=0.011330% | Prec ≈ 3 dec. digits
+  [4 proc] Pi: 3.141414080000000 | Abs err=0.000178573589793007 | Rel err=0.005684% | Prec ≈ 3 dec. digits
+  [8 proc] Pi: 3.141602880000000 | Abs err=1.02264102070926e-05 | Rel err=0.000326% | Prec ≈ 4 dec. digits
+  1 processes: 1.271352s, Speedup: 1.0000x, Efficiency: 100.00%
+  2 processes: 0.717250s, Speedup: 1.7725x, Efficiency: 88.63%
+  4 processes: 0.437108s, Speedup: 2.9086x, Efficiency: 72.71%
+  8 processes: 0.251453s, Speedup: 5.0560x, Efficiency: 63.20%
 
 100,000,000 iterations:
-  [1 proc] Pi: 3.141771040000000 | Abs err=0.000178386410206954 | Rel err=0.005678% | Prec ≈ 3 dec. digits
-  [2 proc] Pi: 3.141743960000000 | Abs err=0.000151306410206775 | Rel err=0.004816% | Prec ≈ 3 dec. digits
-  [4 proc] Pi: 3.141337880000000 | Abs err=0.000254773589793089 | Rel err=0.008110% | Prec ≈ 3 dec. digits
-  [8 proc] Pi: 3.141485960000000 | Abs err=0.000106693589793316 | Rel err=0.003396% | Prec ≈ 3 dec. digits
-  1 processes: 2.519671s, Speedup: 1.0000x, Efficiency: 100.00%
-  2 processes: 1.362399s, Speedup: 1.8494x, Efficiency: 92.47%
-  4 processes: 0.853134s, Speedup: 2.9534x, Efficiency: 73.84%
-  8 processes: 0.535236s, Speedup: 4.7076x, Efficiency: 58.84%
+  [1 proc] Pi: 3.141578000000000 | Abs err=1.46535897931344e-05 | Rel err=0.000466% | Prec ≈ 4 dec. digits
+  [2 proc] Pi: 3.141687760000000 | Abs err=9.51064102068244e-05 | Rel err=0.003027% | Prec ≈ 4 dec. digits
+  [4 proc] Pi: 3.141495720000000 | Abs err=9.69335897931245e-05 | Rel err=0.003085% | Prec ≈ 4 dec. digits
+  [8 proc] Pi: 3.141753840000000 | Abs err=0.000161186410206682 | Rel err=0.005131% | Prec ≈ 3 dec. digits
+  1 processes: 2.628970s, Speedup: 1.0000x, Efficiency: 100.00%
+  2 processes: 1.432706s, Speedup: 1.8350x, Efficiency: 91.75%
+  4 processes: 0.777457s, Speedup: 3.3815x, Efficiency: 84.54%
+  8 processes: 0.547468s, Speedup: 4.8021x, Efficiency: 60.03%
 
 ======================================================================
 
@@ -75,34 +115,54 @@ NAIVE Algorithm:
 ----------------------------------------
 
 1,000,000 iterations:
-  [1 proc] Pi: 3.142532000000000 | Abs err=0.000939346410206987 | Rel err=0.029900% | Prec ≈ 3 dec. digits
-  [2 proc] Pi: 3.145424000000000 | Abs err=0.0038313464102071 | Rel err=0.121956% | Prec ≈ 2 dec. digits
-  [4 proc] Pi: 3.141224000000000 | Abs err=0.000368653589793322 | Rel err=0.011735% | Prec ≈ 3 dec. digits
-  [8 proc] Pi: 3.139512000000000 | Abs err=0.00208065358979326 | Rel err=0.066229% | Prec ≈ 2 dec. digits
-  1 processes: 0.025098s, Speedup: 1.0000x, Efficiency: 100.00%
-  2 processes: 0.012669s, Speedup: 1.9811x, Efficiency: 99.05%
-  4 processes: 0.006795s, Speedup: 3.6936x, Efficiency: 92.34%
-  8 processes: 0.005149s, Speedup: 4.8743x, Efficiency: 60.93%
+  [1 proc] Pi: 3.138572000000000 | Abs err=0.0030206535897932 | Rel err=0.096150% | Prec ≈ 2 dec. digits
+  [2 proc] Pi: 3.141980000000000 | Abs err=0.000387346410207101 | Rel err=0.012330% | Prec ≈ 3 dec. digits
+  [4 proc] Pi: 3.143060000000000 | Abs err=0.00146734641020707 | Rel err=0.046707% | Prec ≈ 2 dec. digits
+  [8 proc] Pi: 3.140572000000000 | Abs err=0.00102065358979297 | Rel err=0.032488% | Prec ≈ 2 dec. digits
+  1 processes: 0.025625s, Speedup: 1.0000x, Efficiency: 100.00%
+  2 processes: 0.013165s, Speedup: 1.9464x, Efficiency: 97.32%
+  4 processes: 0.006806s, Speedup: 3.7651x, Efficiency: 94.13%
+  8 processes: 0.005153s, Speedup: 4.9728x, Efficiency: 62.16%
+
+5,000,000 iterations:
+  [1 proc] Pi: 3.140390400000000 | Abs err=0.00120225358979331 | Rel err=0.038269% | Prec ≈ 2 dec. digits
+  [2 proc] Pi: 3.140815200000000 | Abs err=0.000777453589793087 | Rel err=0.024747% | Prec ≈ 3 dec. digits
+  [4 proc] Pi: 3.141860000000000 | Abs err=0.000267346410206759 | Rel err=0.008510% | Prec ≈ 3 dec. digits
+  [8 proc] Pi: 3.141656000000000 | Abs err=6.33464102066661e-05 | Rel err=0.002016% | Prec ≈ 4 dec. digits
+  1 processes: 0.125847s, Speedup: 1.0000x, Efficiency: 100.00%
+  2 processes: 0.076843s, Speedup: 1.6377x, Efficiency: 81.89%
+  4 processes: 0.033040s, Speedup: 3.8089x, Efficiency: 95.22%
+  8 processes: 0.019887s, Speedup: 6.3281x, Efficiency: 79.10%
 
 10,000,000 iterations:
-  [1 proc] Pi: 3.141269200000000 | Abs err=0.000323453589793132 | Rel err=0.010296% | Prec ≈ 3 dec. digits
-  [2 proc] Pi: 3.142266800000000 | Abs err=0.000674146410206689 | Rel err=0.021459% | Prec ≈ 3 dec. digits
-  [4 proc] Pi: 3.141586000000000 | Abs err=6.65358979290431e-06 | Rel err=0.000212% | Prec ≈ 5 dec. digits
-  [8 proc] Pi: 3.142180400000000 | Abs err=0.000587746410206869 | Rel err=0.018709% | Prec ≈ 3 dec. digits
-  1 processes: 0.252688s, Speedup: 1.0000x, Efficiency: 100.00%
-  2 processes: 0.159684s, Speedup: 1.5824x, Efficiency: 79.12%
-  4 processes: 0.086887s, Speedup: 2.9082x, Efficiency: 72.71%
-  8 processes: 0.054837s, Speedup: 4.6080x, Efficiency: 57.60%
+  [1 proc] Pi: 3.140716400000000 | Abs err=0.000876253589793041 | Rel err=0.027892% | Prec ≈ 3 dec. digits
+  [2 proc] Pi: 3.141988400000000 | Abs err=0.000395746410206677 | Rel err=0.012597% | Prec ≈ 3 dec. digits
+  [4 proc] Pi: 3.141661600000000 | Abs err=6.89464102068271e-05 | Rel err=0.002195% | Prec ≈ 4 dec. digits
+  [8 proc] Pi: 3.141535200000000 | Abs err=5.74535897932549e-05 | Rel err=0.001829% | Prec ≈ 4 dec. digits
+  1 processes: 0.252053s, Speedup: 1.0000x, Efficiency: 100.00%
+  2 processes: 0.138788s, Speedup: 1.8161x, Efficiency: 90.81%
+  4 processes: 0.088053s, Speedup: 2.8625x, Efficiency: 71.56%
+  8 processes: 0.049146s, Speedup: 5.1287x, Efficiency: 64.11%
+
+50,000,000 iterations:
+  [1 proc] Pi: 3.141575440000000 | Abs err=1.72135897931192e-05 | Rel err=0.000548% | Prec ≈ 4 dec. digits
+  [2 proc] Pi: 3.141236720000000 | Abs err=0.000355933589792912 | Rel err=0.011330% | Prec ≈ 3 dec. digits
+  [4 proc] Pi: 3.141448240000000 | Abs err=0.000144413589793224 | Rel err=0.004597% | Prec ≈ 3 dec. digits
+  [8 proc] Pi: 3.141602880000000 | Abs err=1.02264102070926e-05 | Rel err=0.000326% | Prec ≈ 4 dec. digits
+  1 processes: 1.295406s, Speedup: 1.0000x, Efficiency: 100.00%
+  2 processes: 0.662145s, Speedup: 1.9564x, Efficiency: 97.82%
+  4 processes: 0.472443s, Speedup: 2.7419x, Efficiency: 68.55%
+  8 processes: 0.241361s, Speedup: 5.3671x, Efficiency: 67.09%
 
 100,000,000 iterations:
-  [1 proc] Pi: 3.141601280000000 | Abs err=8.62641020704658e-06 | Rel err=0.000275% | Prec ≈ 5 dec. digits
-  [2 proc] Pi: 3.141733480000000 | Abs err=0.000140826410206962 | Rel err=0.004483% | Prec ≈ 3 dec. digits
-  [4 proc] Pi: 3.141955520000000 | Abs err=0.000362866410206664 | Rel err=0.011550% | Prec ≈ 3 dec. digits
-  [8 proc] Pi: 3.141530520000000 | Abs err=6.2133589793234e-05 | Rel err=0.001978% | Prec ≈ 4 dec. digits
-  1 processes: 2.525142s, Speedup: 1.0000x, Efficiency: 100.00%
-  2 processes: 1.320592s, Speedup: 1.9121x, Efficiency: 95.61%
-  4 processes: 0.800713s, Speedup: 3.1536x, Efficiency: 78.84%
-  8 processes: 0.549233s, Speedup: 4.5976x, Efficiency: 57.47%
+  [1 proc] Pi: 3.141677600000000 | Abs err=8.49464102068431e-05 | Rel err=0.002704% | Prec ≈ 4 dec. digits
+  [2 proc] Pi: 3.141404160000000 | Abs err=0.000188493589793115 | Rel err=0.006000% | Prec ≈ 3 dec. digits
+  [4 proc] Pi: 3.141401880000000 | Abs err=0.000190773589793025 | Rel err=0.006073% | Prec ≈ 3 dec. digits
+  [8 proc] Pi: 3.141753840000000 | Abs err=0.000161186410206682 | Rel err=0.005131% | Prec ≈ 3 dec. digits
+  1 processes: 2.587399s, Speedup: 1.0000x, Efficiency: 100.00%
+  2 processes: 1.413503s, Speedup: 1.8305x, Efficiency: 91.52%
+  4 processes: 0.834512s, Speedup: 3.1005x, Efficiency: 77.51%
+  8 processes: 0.502341s, Speedup: 5.1507x, Efficiency: 64.38%
 
 ======================================================================
 
