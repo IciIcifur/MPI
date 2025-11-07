@@ -1,12 +1,6 @@
 #!/usr/bin/env python3
 """
 Analysis and plotting for Cannon's algorithm benchmark results.
-
-Reads results from results/cannon_results/cannon_results.csv and generates:
- - execution_time_vs_size.png
- - speedup_vs_processes.png
- - efficiency_vs_processes.png
- - statistics.txt
 """
 import os
 import csv
@@ -35,32 +29,41 @@ def load_results():
 
     with open(RESULTS_FILE, 'r') as f:
         reader = csv.DictReader(f)
-        for row in reader:
+        for row_idx, row in enumerate(reader, start=1):
             try:
-                p = int(row['num_processes'])
-                n = int(row['matrix_size'])
-                t = float(row['avg_time'])
+                p = int(row.get('num_processes', '0'))
+                n = int(row.get('matrix_size', '0'))
+                t = float(row.get('avg_time', '0'))
             except Exception:
+                print(f"Warning: skipping malformed CSV row #{row_idx}: {row}")
                 continue
 
             data_time[n][p].append(t)
 
-            try:
-                s = float(row['speedup']) if row.get('speedup') else None
-                if s is not None:
+            s_val = row.get('speedup')
+            if s_val and s_val.strip():
+                try:
+                    s = float(s_val)
                     data_speedup[n][p].append(s)
-            except Exception:
-                pass
+                except Exception:
+                    pass
 
-            try:
-                e = float(row['efficiency']) if row.get('efficiency') else None
-                if e is not None:
+            e_val = row.get('efficiency')
+            if e_val and e_val.strip():
+                try:
+                    e = float(e_val)
                     data_eff[n][p].append(e)
-            except Exception:
-                pass
+                except Exception:
+                    pass
 
             ch = row.get('check', '').strip()
             checks[n][p].append(ch)
+
+            if p == 1:
+                if not data_speedup[n][p]:
+                    data_speedup[n][p].append(1.0)
+                if not data_eff[n][p]:
+                    data_eff[n][p].append(100.0)
 
     return data_time, data_speedup, data_eff, checks
 
@@ -95,7 +98,7 @@ def plot_speedup_vs_processes(data_speedup):
         if candidates:
             characteristic_sizes.append(candidates[0])
     if not characteristic_sizes:
-        characteristic_sizes = sizes_all[-4:]
+        characteristic_sizes = sizes_all[-4:] if sizes_all else []
 
     markers = ['o','s','^','D','v','<','>','x']
     for i, n in enumerate(characteristic_sizes):
@@ -105,11 +108,9 @@ def plot_speedup_vs_processes(data_speedup):
         speedups = [np.mean(data_speedup[n][p]) for p in processes]
         plt.plot(processes, speedups, marker=markers[i%len(markers)], label=f'N={n}', linewidth=2)
 
-    if plt.gca().get_xlim()[1] < 1:
-        ideal_max = max([p for n in data_speedup for p in data_speedup[n].keys()] + [1])
-    else:
-        ideal_max = int(max([p for n in data_speedup for p in data_speedup[n].keys()] + [1]))
-    ideal = list(range(1, ideal_max+1))
+    all_ps = [p for n in data_speedup for p in data_speedup[n].keys()]
+    ideal_max = max(all_ps + [1])
+    ideal = list(range(1, int(ideal_max)+1))
     plt.plot(ideal, ideal, 'k--', label='Ideal', linewidth=1)
 
     plt.xlabel('Number of processes')
@@ -163,7 +164,11 @@ def print_and_save_statistics(data_time, data_speedup, data_eff, checks):
                     continue
                 avg_t = np.mean(times)
                 std_t = np.std(times)
-                line = f"  {p:3d} proc: {avg_t:.6f}s (±{std_t:.6f}s)"
+                if std_t > 0:
+                    time_part = f"{avg_t:.6f}s (±{std_t:.6f}s)"
+                else:
+                    time_part = f"{avg_t:.6f}s"
+                line = f"  {p:3d} proc: {time_part}"
                 sp_list = data_speedup[n].get(p, [])
                 ef_list = data_eff[n].get(p, [])
                 if sp_list and ef_list:

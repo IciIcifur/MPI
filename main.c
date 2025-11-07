@@ -5,7 +5,7 @@
 
 int requested_matrix_size = -1;
 
-int runTask(int taskNumber) {
+int runTask(const int taskNumber) {
     switch (taskNumber) {
         case 1:
             return runTask1();
@@ -40,7 +40,13 @@ int main(int argc, char *argv[]) {
         printf("Enter task number:\n1 - Finding PI\n2 - Matrix Multiplication\n3 - Cannon's Matrix Multiplication\n");
 
         while (selectedTask != 1) {
-            scanf("%d", &selectedTask);
+            const int scan_result = scanf("%d", &selectedTask);
+            if (scan_result != 1) {
+                printf("Error reading input. Please enter a number.\n");
+                while (getchar() != '\n');
+                continue;
+            }
+
             if (selectedTask == 1) {
                 printf("-------------Task %d---------------\n\n", selectedTask);
                 break;

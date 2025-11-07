@@ -1,13 +1,6 @@
 #!/usr/bin/env python3
 """
 Analysis script for matrix multiplication benchmark results.
-Generates graphs and statistical analysis.
-
-Changes applied:
- - Fixed syntax errors (unterminated f-strings).
- - Do not print "(±0.000000s)" when std == 0 (no repeats).
- - If speedup/efficiency for 1 process are missing in CSV, fill defaults (1.0 / 100.0).
- - Small robustness improvements on CSV parsing and reporting.
 """
 
 import os
@@ -64,7 +57,6 @@ def load_results():
             if processes not in data[algo][size]['efficiencies']:
                 data[algo][size]['efficiencies'][processes] = []
 
-            # Execution time
             try:
                 exec_time = float(row.get('execution_time', '0'))
                 data[algo][size]['execution_times'][processes].append(exec_time)
@@ -72,7 +64,6 @@ def load_results():
                 print(f"Warning: bad execution_time at row #{row_idx}: {row.get('execution_time')}")
                 continue
 
-            # Speedup & efficiency may be empty in CSV; try to parse if present
             sp_val = row.get('speedup')
             if sp_val and sp_val.strip():
                 try:
@@ -309,7 +300,6 @@ def print_statistics(data):
                             avg_time = np.mean(times)
                             std_time = np.std(times)
 
-                            # Only show ± if std_time > 0 (i.e. repeats exist)
                             if std_time > 0:
                                 time_str = f"{avg_time:.6f}s (±{std_time:.6f}s)"
                             else:

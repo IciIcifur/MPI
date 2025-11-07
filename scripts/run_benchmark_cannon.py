@@ -47,7 +47,7 @@ def run_cannon(num_processes):
         print("ERROR: No executable found. Set CANNON_EXEC or put an executable in bin/ (e.g. bin/main or bin/pi_calculator).")
         return None
 
-    print(f"Running Cannon: {num_processes} processes, executable: {EXECUTABLE}")
+    print(f"Running Cannon: {num_processes} processes")
     cmd = ["mpirun"] + MPIRUN_OPTS.split() + ["-np", str(num_processes), EXECUTABLE, "3"]
 
     try:
@@ -74,11 +74,19 @@ def run_cannon(num_processes):
         try:
             n = int(parts[0])
             p = int(parts[1])
-            avg_time = float(parts[2])
-            speedup = float(parts[3])
-            efficiency = float(parts[4])
-            check = parts[5]
+            if len(parts) >= 7:
+                seq_time = float(parts[2])
+                avg_time = float(parts[3])
+                speedup = float(parts[4])
+                efficiency = float(parts[5])
+                check = parts[6]
+            else:
+                avg_time = float(parts[2])
+                speedup = float(parts[3]) if len(parts) > 3 else 0.0
+                efficiency = float(parts[4]) if len(parts) > 4 else 0.0
+                check = parts[5] if len(parts) > 5 else ''
         except Exception:
+            # malformed numeric conversion => skip
             continue
         parsed.append({
             'matrix_size': n,
@@ -139,19 +147,31 @@ def main():
 
             ts = datetime.now().isoformat()
             for entry in results:
+                if entry['processes'] == 1:
+                    speedup_str = "1.000000"
+                    efficiency_str = "100.000000"
+                else:
+                    speedup_str = f"{entry['speedup']:.6f}"
+                    efficiency_str = f"{entry['efficiency']:.6f}"
+
                 row = {
                     'timestamp': ts,
                     'num_processes': entry['processes'],
                     'matrix_size': entry['matrix_size'],
                     'avg_time': f"{entry['avg_time']:.6f}",
-                    'speedup': f"{entry['speedup']:.6f}",
-                    'efficiency': f"{entry['efficiency']:.6f}",
+                    'speedup': speedup_str,
+                    'efficiency': efficiency_str,
                     'check': entry['check']
                 }
                 writer.writerow(row)
                 csvfile.flush()
-                print(f"  N={entry['matrix_size']:5d} | P={entry['processes']:3d} | "
-                      f"Time={entry['avg_time']:.6f}s | S={entry['speedup']:.3f} | E={entry['efficiency']:.2f}% | {entry['check']}")
+                try:
+                    sp_display = float(speedup_str)
+                    ef_display = float(efficiency_str)
+                    print(f"  N={entry['matrix_size']:5d} | P={entry['processes']:3d} | "
+                          f"Time={entry['avg_time']:.6f}s | S={sp_display:.3f} | E={ef_display:.2f}% | {entry['check']}")
+                except Exception:
+                    print(f"  N={entry['matrix_size']:5d} | P={entry['processes']:3d} | Time={entry['avg_time']:.6f}s | {entry['check']}")
 
     print("\nBenchmark finished. CSV saved to:", RESULTS_FILE)
 

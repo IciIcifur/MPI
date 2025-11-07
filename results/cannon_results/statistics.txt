@@ -3,105 +3,105 @@ CANNON ALGORITHM - STATISTICAL ANALYSIS
 
 Matrix size: 72
 ----------------------------------------
-    1 proc: 0.000194s (±0.000000s), Speedup=0.0002x, Eff=1.00%, Check=100.00
-    4 proc: 0.000191s (±0.000000s), Speedup=0.0001x, Eff=1.97%, Check=49.34
-    9 proc: 0.000336s (±0.000000s), Speedup=0.0001x, Eff=3.21%, Check=35.65
-   16 proc: 0.000453s (±0.000000s), Speedup=0.0001x, Eff=3.07%, Check=19.19
+    1 proc: 0.000198s, Speedup=1.0000x, Eff=100.00%, Check=OK (abs=0.000000e+00 rel=0.000000e+00)
+    4 proc: 0.000093s, Speedup=2.0490x, Eff=51.23%, Check=OK (abs=2.486900e-14 rel=1.023217e-15)
+    9 proc: 0.000106s, Speedup=3.0790x, Eff=34.22%, Check=OK (abs=2.842171e-14 rel=1.169391e-15)
+   16 proc: 0.000421s, Speedup=0.9230x, Eff=5.77%, Check=OK (abs=2.131628e-14 rel=8.770430e-16)
 
 Matrix size: 84
 ----------------------------------------
-    1 proc: 0.000296s (±0.000000s), Speedup=0.0003x, Eff=1.00%, Check=100.00
-    4 proc: 0.000294s (±0.000000s), Speedup=0.0001x, Eff=2.41%, Check=60.30
-    9 proc: 0.000522s (±0.000000s), Speedup=0.0001x, Eff=3.72%, Check=41.34
-   16 proc: 0.000767s (±0.000000s), Speedup=0.0007x, Eff=1.05%, Check=6.59
+    1 proc: 0.000292s, Speedup=1.0000x, Eff=100.00%, Check=OK (abs=0.000000e+00 rel=0.000000e+00)
+    4 proc: 0.000118s, Speedup=2.4880x, Eff=62.20%, Check=OK (abs=3.197442e-14 rel=1.115722e-15)
+    9 proc: 0.000135s, Speedup=3.6490x, Eff=40.54%, Check=OK (abs=3.552714e-14 rel=1.239691e-15)
+   16 proc: 0.000088s, Speedup=6.8850x, Eff=43.03%, Check=OK (abs=3.197442e-14 rel=1.115722e-15)
 
 Matrix size: 108
 ----------------------------------------
-    1 proc: 0.000602s (±0.000000s), Speedup=0.0006x, Eff=1.00%, Check=100.00
-    4 proc: 0.000604s (±0.000000s), Speedup=0.0002x, Eff=2.92%, Check=72.97
-    9 proc: 0.001135s (±0.000000s), Speedup=0.0005x, Eff=2.36%, Check=26.21
-   16 proc: 0.001308s (±0.000000s), Speedup=0.0005x, Eff=2.74%, Check=17.12
+    1 proc: 0.000589s, Speedup=1.0000x, Eff=100.00%, Check=OK (abs=0.000000e+00 rel=0.000000e+00)
+    4 proc: 0.000221s, Speedup=2.8400x, Eff=70.99%, Check=OK (abs=4.263256e-14 rel=1.233833e-15)
+    9 proc: 0.000221s, Speedup=4.9040x, Eff=54.49%, Check=OK (abs=3.907985e-14 rel=1.131014e-15)
+   16 proc: 0.000270s, Speedup=4.4570x, Eff=27.86%, Check=OK (abs=3.907985e-14 rel=1.131014e-15)
 
 Matrix size: 144
 ----------------------------------------
-    1 proc: 0.001415s (±0.000000s), Speedup=0.0014x, Eff=1.00%, Check=100.00
-    4 proc: 0.001403s (±0.000000s), Speedup=0.0004x, Eff=3.25%, Check=81.13
-    9 proc: 0.002664s (±0.000000s), Speedup=0.0004x, Eff=6.90%, Check=76.67
-   16 proc: 0.002730s (±0.000000s), Speedup=0.0008x, Eff=3.34%, Check=20.89
+    1 proc: 0.001302s, Speedup=1.0000x, Eff=100.00%, Check=OK (abs=0.000000e+00 rel=0.000000e+00)
+    4 proc: 0.000456s, Speedup=3.0140x, Eff=75.34%, Check=OK (abs=7.815970e-14 rel=1.700096e-15)
+    9 proc: 0.000438s, Speedup=5.4590x, Eff=60.65%, Check=OK (abs=7.105427e-14 rel=1.545542e-15)
+   16 proc: 0.000364s, Speedup=8.8220x, Eff=55.13%, Check=OK (abs=7.815970e-14 rel=1.700096e-15)
 
 Matrix size: 180
 ----------------------------------------
-    1 proc: 0.002644s (±0.000000s), Speedup=0.0027x, Eff=1.00%, Check=100.00
-    4 proc: 0.002611s (±0.000000s), Speedup=0.0008x, Eff=3.29%, Check=82.24
-    9 proc: 0.002965s (±0.000000s), Speedup=0.0007x, Eff=4.04%, Check=44.85
-   16 proc: 0.006615s (±0.000000s), Speedup=0.0011x, Eff=5.92%, Check=36.98
+    1 proc: 0.002563s, Speedup=1.0000x, Eff=100.00%, Check=OK (abs=0.000000e+00 rel=0.000000e+00)
+    4 proc: 0.000882s, Speedup=3.0600x, Eff=76.49%, Check=OK (abs=1.065814e-13 rel=1.938994e-15)
+    9 proc: 0.000786s, Speedup=6.3920x, Eff=71.02%, Check=OK (abs=1.065814e-13 rel=1.938994e-15)
+   16 proc: 0.000739s, Speedup=8.5600x, Eff=53.50%, Check=OK (abs=1.065814e-13 rel=1.938994e-15)
 
 Matrix size: 228
 ----------------------------------------
-    1 proc: 0.005267s (±0.000000s), Speedup=0.0054x, Eff=1.00%, Check=100.00
-    4 proc: 0.005044s (±0.000000s), Speedup=0.0014x, Eff=3.50%, Check=87.57
-    9 proc: 0.010145s (±0.000000s), Speedup=0.0015x, Eff=6.77%, Check=75.24
-   16 proc: 0.012234s (±0.000000s), Speedup=0.0104x, Eff=1.18%, Check=7.35
+    1 proc: 0.005572s, Speedup=1.0000x, Eff=100.00%, Check=OK (abs=0.000000e+00 rel=0.000000e+00)
+    4 proc: 0.001617s, Speedup=3.7840x, Eff=94.59%, Check=OK (abs=1.421085e-13 rel=2.061117e-15)
+    9 proc: 0.001571s, Speedup=4.0850x, Eff=45.39%, Check=OK (abs=1.421085e-13 rel=2.061117e-15)
+   16 proc: 0.001148s, Speedup=11.2350x, Eff=70.22%, Check=OK (abs=1.278977e-13 rel=1.855006e-15)
 
 Matrix size: 288
 ----------------------------------------
-    1 proc: 0.010676s (±0.000000s), Speedup=0.0107x, Eff=1.00%, Check=100.00
-    4 proc: 0.011415s (±0.000000s), Speedup=0.0034x, Eff=3.38%, Check=84.43
-    9 proc: 0.015864s (±0.000000s), Speedup=0.0033x, Eff=4.83%, Check=53.68
-   16 proc: 0.024550s (±0.000000s), Speedup=0.0064x, Eff=3.81%, Check=23.79
+    1 proc: 0.011610s, Speedup=1.0000x, Eff=100.00%, Check=OK (abs=0.000000e+00 rel=0.000000e+00)
+    4 proc: 0.003454s, Speedup=4.0250x, Eff=100.63%, Check=OK (abs=2.415845e-13 rel=2.712132e-15)
+    9 proc: 0.003120s, Speedup=6.7380x, Eff=74.86%, Check=OK (abs=2.131628e-13 rel=2.393058e-15)
+   16 proc: 0.002707s, Speedup=9.5880x, Eff=59.92%, Check=OK (abs=2.273737e-13 rel=2.552595e-15)
 
 Matrix size: 372
 ----------------------------------------
-    1 proc: 0.020630s (±0.000000s), Speedup=0.0208x, Eff=1.00%, Check=100.00
-    4 proc: 0.028981s (±0.000000s), Speedup=0.0088x, Eff=3.29%, Check=82.34
-    9 proc: 0.037191s (±0.000000s), Speedup=0.0077x, Eff=4.80%, Check=53.38
-   16 proc: 0.056037s (±0.000000s), Speedup=0.0050x, Eff=11.32%, Check=70.76
+    1 proc: 0.024102s, Speedup=1.0000x, Eff=100.00%, Check=OK (abs=0.000000e+00 rel=0.000000e+00)
+    4 proc: 0.012395s, Speedup=2.2300x, Eff=55.74%, Check=OK (abs=3.268497e-13 rel=2.881338e-15)
+    9 proc: 0.006512s, Speedup=4.8180x, Eff=53.53%, Check=OK (abs=3.552714e-13 rel=3.131889e-15)
+   16 proc: 0.006876s, Speedup=8.0390x, Eff=50.24%, Check=OK (abs=3.836931e-13 rel=3.382440e-15)
 
 Matrix size: 468
 ----------------------------------------
-    1 proc: 0.046097s (±0.000000s), Speedup=0.0421x, Eff=1.00%, Check=100.00
-    4 proc: 0.063617s (±0.000000s), Speedup=0.0149x, Eff=4.28%, Check=106.88
-    9 proc: 0.073600s (±0.000000s), Speedup=0.0128x, Eff=5.76%, Check=63.96
-   16 proc: 0.119158s (±0.000000s), Speedup=0.0089x, Eff=13.40%, Check=83.75
+    1 proc: 0.048034s, Speedup=1.0000x, Eff=100.00%, Check=OK (abs=0.000000e+00 rel=0.000000e+00)
+    4 proc: 0.013873s, Speedup=5.6850x, Eff=142.13%, Check=OK (abs=4.263256e-13 rel=3.041934e-15)
+    9 proc: 0.012329s, Speedup=6.5330x, Eff=72.58%, Check=OK (abs=3.694822e-13 rel=2.636343e-15)
+   16 proc: 0.010958s, Speedup=10.1620x, Eff=63.51%, Check=OK (abs=4.263256e-13 rel=3.041934e-15)
 
 Matrix size: 600
 ----------------------------------------
-    1 proc: 0.106571s (±0.000000s), Speedup=0.1072x, Eff=1.00%, Check=100.00
-    4 proc: 0.166182s (±0.000000s), Speedup=0.0326x, Eff=5.10%, Check=127.41
-    9 proc: 0.159893s (±0.000000s), Speedup=0.0262x, Eff=6.10%, Check=67.81
-   16 proc: 0.237180s (±0.000000s), Speedup=0.0198x, Eff=11.97%, Check=74.83
+    1 proc: 0.089748s, Speedup=1.0000x, Eff=100.00%, Check=OK (abs=0.000000e+00 rel=0.000000e+00)
+    4 proc: 0.028613s, Speedup=4.8440x, Eff=121.11%, Check=OK (abs=7.105427e-13 rel=4.114628e-15)
+    9 proc: 0.026304s, Speedup=6.5040x, Eff=72.27%, Check=OK (abs=7.105427e-13 rel=4.114628e-15)
+   16 proc: 0.019889s, Speedup=11.6380x, Eff=72.74%, Check=OK (abs=7.105427e-13 rel=4.114628e-15)
 
 Matrix size: 768
 ----------------------------------------
-    1 proc: 0.247584s (±0.000000s), Speedup=0.2305x, Eff=1.00%, Check=100.00
-    4 proc: 0.285644s (±0.000000s), Speedup=0.0833x, Eff=3.43%, Check=85.74
-    9 proc: 0.308650s (±0.000000s), Speedup=0.0555x, Eff=5.56%, Check=61.79
-   16 proc: 0.493033s (±0.000000s), Speedup=0.0369x, Eff=13.37%, Check=83.56
+    1 proc: 0.184136s, Speedup=1.0000x, Eff=100.00%, Check=OK (abs=0.000000e+00 rel=0.000000e+00)
+    4 proc: 0.082175s, Speedup=3.4120x, Eff=85.29%, Check=OK (abs=1.051603e-12 rel=4.728209e-15)
+    9 proc: 0.057682s, Speedup=6.0020x, Eff=66.69%, Check=OK (abs=1.080025e-12 rel=4.855998e-15)
+   16 proc: 0.037909s, Speedup=12.6270x, Eff=78.92%, Check=OK (abs=9.947598e-13 rel=4.472630e-15)
 
 Matrix size: 984
 ----------------------------------------
-    1 proc: 0.530115s (±0.000000s), Speedup=0.4612x, Eff=1.00%, Check=100.00
-    4 proc: 0.557082s (±0.000000s), Speedup=0.1284x, Eff=4.34%, Check=108.44
-    9 proc: 0.728220s (±0.000000s), Speedup=0.1134x, Eff=6.42%, Check=71.35
-   16 proc: 1.031368s (±0.000000s), Speedup=0.0927x, Eff=11.12%, Check=69.52
+    1 proc: 0.410193s, Speedup=1.0000x, Eff=100.00%, Check=OK (abs=0.000000e+00 rel=0.000000e+00)
+    4 proc: 0.162210s, Speedup=3.5950x, Eff=89.87%, Check=OK (abs=1.421085e-12 rel=5.010475e-15)
+    9 proc: 0.114733s, Speedup=6.1460x, Eff=68.29%, Check=OK (abs=1.250555e-12 rel=4.409218e-15)
+   16 proc: 0.096767s, Speedup=10.8110x, Eff=67.57%, Check=OK (abs=1.421085e-12 rel=5.010475e-15)
 
 Matrix size: 1248
 ----------------------------------------
-    1 proc: 1.228008s (±0.000000s), Speedup=0.8855x, Eff=1.00%, Check=100.00
-    4 proc: 1.338064s (±0.000000s), Speedup=0.3338x, Eff=4.01%, Check=100.21
-    9 proc: 1.521388s (±0.000000s), Speedup=0.2284x, Eff=6.66%, Check=74.00
-   16 proc: 2.191416s (±0.000000s), Speedup=0.1610x, Eff=13.61%, Check=85.05
+    1 proc: 0.877375s, Speedup=1.0000x, Eff=100.00%, Check=OK (abs=0.000000e+00 rel=0.000000e+00)
+    4 proc: 0.311273s, Speedup=4.4740x, Eff=111.85%, Check=OK (abs=2.216893e-12 rel=6.285932e-15)
+    9 proc: 0.226104s, Speedup=7.2780x, Eff=80.87%, Check=OK (abs=2.330580e-12 rel=6.608288e-15)
+   16 proc: 0.209477s, Speedup=11.6410x, Eff=72.76%, Check=OK (abs=2.273737e-12 rel=6.447110e-15)
 
 Matrix size: 1608
 ----------------------------------------
-    1 proc: 2.541470s (±0.000000s), Speedup=2.2274x, Eff=1.00%, Check=100.00
-    4 proc: 3.353062s (±0.000000s), Speedup=0.7176x, Eff=4.67%, Check=116.82
-    9 proc: 3.541201s (±0.000000s), Speedup=0.4641x, Eff=7.63%, Check=84.78
-   16 proc: 4.859362s (±0.000000s), Speedup=0.3606x, Eff=13.48%, Check=84.22
+    1 proc: 2.409824s, Speedup=1.0000x, Eff=100.00%, Check=OK (abs=0.000000e+00 rel=0.000000e+00)
+    4 proc: 0.914655s, Speedup=3.8210x, Eff=95.52%, Check=OK (abs=3.581135e-12 rel=8.021954e-15)
+    9 proc: 0.469612s, Speedup=7.8870x, Eff=87.63%, Check=OK (abs=3.353762e-12 rel=7.512623e-15)
+   16 proc: 0.467879s, Speedup=10.7670x, Eff=67.30%, Check=OK (abs=3.524292e-12 rel=7.894621e-15)
 
 Matrix size: 2052
 ----------------------------------------
-    1 proc: 4.906010s (±0.000000s), Speedup=5.1640x, Eff=1.00%, Check=100.00
-    4 proc: 6.571115s (±0.000000s), Speedup=1.7241x, Eff=3.81%, Check=95.28
-    9 proc: 6.662640s (±0.000000s), Speedup=0.9494x, Eff=7.02%, Check=77.98
-   16 proc: 6.766981s (±0.000000s), Speedup=0.7420x, Eff=9.12%, Check=57.00
+    1 proc: 5.553169s, Speedup=1.0000x, Eff=100.00%, Check=OK (abs=0.000000e+00 rel=0.000000e+00)
+    4 proc: 1.835769s, Speedup=3.6260x, Eff=90.66%, Check=OK (abs=4.320100e-12 rel=7.612361e-15)
+    9 proc: 0.999059s, Speedup=6.7280x, Eff=74.76%, Check=OK (abs=4.092726e-12 rel=7.211711e-15)
+   16 proc: 0.914409s, Speedup=7.8540x, Eff=49.09%, Check=OK (abs=4.320100e-12 rel=7.612361e-15)
