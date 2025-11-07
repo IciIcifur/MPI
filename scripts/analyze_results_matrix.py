@@ -2,6 +2,12 @@
 """
 Analysis script for matrix multiplication benchmark results.
 Generates graphs and statistical analysis.
+
+Changes applied:
+ - Fixed syntax errors (unterminated f-strings).
+ - Do not print "(±0.000000s)" when std == 0 (no repeats).
+ - If speedup/efficiency for 1 process are missing in CSV, fill defaults (1.0 / 100.0).
+ - Small robustness improvements on CSV parsing and reporting.
 """
 
 import os
@@ -29,10 +35,18 @@ def load_results():
 
     with open(RESULTS_FILE, 'r') as f:
         reader = csv.DictReader(f)
-        for row in reader:
-            algo = row['algorithm']
-            processes = int(row['num_processes'])
-            size = int(row['matrix_size'])
+        for row_idx, row in enumerate(reader, start=1):
+            try:
+                algo = row.get('algorithm', '').strip()
+                processes = int(row.get('num_processes', '0'))
+                size = int(row.get('matrix_size', '0'))
+            except Exception:
+                print(f"Warning: skipping malformed CSV row #{row_idx}: {row}")
+                continue
+
+            if not algo:
+                print(f"Warning: missing algorithm in row #{row_idx}")
+                continue
 
             if algo not in data:
                 data[algo] = {}
@@ -50,22 +64,37 @@ def load_results():
             if processes not in data[algo][size]['efficiencies']:
                 data[algo][size]['efficiencies'][processes] = []
 
-            exec_time = float(row['execution_time'])
-            data[algo][size]['execution_times'][processes].append(exec_time)
+            # Execution time
+            try:
+                exec_time = float(row.get('execution_time', '0'))
+                data[algo][size]['execution_times'][processes].append(exec_time)
+            except Exception:
+                print(f"Warning: bad execution_time at row #{row_idx}: {row.get('execution_time')}")
+                continue
 
-            if row['speedup'] and row['speedup'].strip():
+            # Speedup & efficiency may be empty in CSV; try to parse if present
+            sp_val = row.get('speedup')
+            if sp_val and sp_val.strip():
                 try:
-                    speedup = float(row['speedup'])
-                    data[algo][size]['speedups'][processes].append(speedup)
+                    sp = float(sp_val)
+                    data[algo][size]['speedups'][processes].append(sp)
                 except ValueError:
                     pass
 
-            if row['efficiency'] and row['efficiency'].strip():
+            ef_val = row.get('efficiency')
+            if ef_val and ef_val.strip():
                 try:
-                    efficiency = float(row['efficiency'])
-                    data[algo][size]['efficiencies'][processes].append(efficiency)
+                    ef = float(ef_val)
+                    data[algo][size]['efficiencies'][processes].append(ef)
                 except ValueError:
                     pass
+
+            # Ensure defaults for single-process rows if speedup/efficiency missing
+            if processes == 1:
+                if not data[algo][size]['speedups'][processes]:
+                    data[algo][size]['speedups'][processes].append(1.0)
+                if not data[algo][size]['efficiencies'][processes]:
+                    data[algo][size]['efficiencies'][processes].append(100.0)
 
     return data
 
@@ -280,19 +309,22 @@ def print_statistics(data):
                             avg_time = np.mean(times)
                             std_time = np.std(times)
 
-                            if processes == 1:
-                                print(f"    {processes} process:  {avg_time:.6f}s (±{std_time:.6f}s)")
+                            # Only show ± if std_time > 0 (i.e. repeats exist)
+                            if std_time > 0:
+                                time_str = f"{avg_time:.6f}s (±{std_time:.6f}s)"
                             else:
-                                speedups = data[algo][size]['speedups'].get(processes, [])
-                                efficiencies = data[algo][size]['efficiencies'].get(processes, [])
+                                time_str = f"{avg_time:.6f}s"
 
-                                if speedups and efficiencies:
-                                    avg_speedup = np.mean(speedups)
-                                    avg_efficiency = np.mean(efficiencies)
-                                    print(f"    {processes} processes: {avg_time:.6f}s (±{std_time:.6f}s), "
-                                          f"Speedup: {avg_speedup:.4f}x, Efficiency: {avg_efficiency:.2f}%")
-                                else:
-                                    print(f"    {processes} processes: {avg_time:.6f}s (±{std_time:.6f}s)")
+                            speedups = data[algo][size]['speedups'].get(processes, [])
+                            efficiencies = data[algo][size]['efficiencies'].get(processes, [])
+
+                            if speedups and efficiencies:
+                                avg_speedup = np.mean(speedups)
+                                avg_efficiency = np.mean(efficiencies)
+                                print(f"    {processes} processes: {time_str}, "
+                                      f"Speedup: {avg_speedup:.4f}x, Efficiency: {avg_efficiency:.2f}%")
+                            else:
+                                print(f"    {processes} processes: {time_str}")
 
 def save_statistics_to_file(data):
     """Save detailed statistics to a text file."""
@@ -323,19 +355,21 @@ def save_statistics_to_file(data):
                                 avg_time = np.mean(times)
                                 std_time = np.std(times)
 
-                                if processes == 1:
-                                    f.write(f"  {processes} process:  {avg_time:.6f}s (±{std_time:.6f}s)\n")
+                                if std_time > 0:
+                                    time_str = f"{avg_time:.6f}s (±{std_time:.6f}s)"
                                 else:
-                                    speedups = data[algo][size]['speedups'].get(processes, [])
-                                    efficiencies = data[algo][size]['efficiencies'].get(processes, [])
+                                    time_str = f"{avg_time:.6f}s"
 
-                                    if speedups and efficiencies:
-                                        avg_speedup = np.mean(speedups)
-                                        avg_efficiency = np.mean(efficiencies)
-                                        f.write(f"  {processes} processes: {avg_time:.6f}s (±{std_time:.6f}s), "
-                                                f"Speedup: {avg_speedup:.4f}x, Efficiency: {avg_efficiency:.2f}%\n")
-                                    else:
-                                        f.write(f"  {processes} processes: {avg_time:.6f}s (±{std_time:.6f}s)\n")
+                                speedups = data[algo][size]['speedups'].get(processes, [])
+                                efficiencies = data[algo][size]['efficiencies'].get(processes, [])
+
+                                if speedups and efficiencies:
+                                    avg_speedup = np.mean(speedups)
+                                    avg_efficiency = np.mean(efficiencies)
+                                    f.write(f"  {processes} processes: {time_str}, "
+                                            f"Speedup: {avg_speedup:.4f}x, Efficiency: {avg_efficiency:.2f}%\n")
+                                else:
+                                    f.write(f"  {processes} processes: {time_str}\n")
 
             f.write("\n" + "=" * 70 + "\n\n")
 

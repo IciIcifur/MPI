@@ -52,13 +52,13 @@ def run_matrix_test(num_processes, matrix_size):
 
         for line in output.split('\n'):
             if '|' in line:
-                parts = line.split('|')
+                parts = [p.strip() for p in line.split('|')]
                 if len(parts) == 3:
-                    algo = parts[0].strip()
+                    algo = parts[0]
                     try:
-                        size = int(parts[1].strip())
-                        time = float(parts[2].strip())
-                    except:
+                        size = int(parts[1])
+                        time = float(parts[2])
+                    except Exception:
                         continue
 
                     if algo in ALGORITHMS and size == matrix_size:
