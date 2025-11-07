@@ -1,0 +1,306 @@
+MATRIX MULTIPLICATION - STATISTICAL ANALYSIS
+======================================================================
+
+ROW Algorithm:
+----------------------------------------
+
+Matrix size: 500
+  1 process:  0.000915s (±0.000000s)
+  2 processes: 0.000812s (±0.000000s), Speedup: 1.1271x, Efficiency: 56.35%
+  4 processes: 0.000819s (±0.000000s), Speedup: 1.1175x, Efficiency: 27.94%
+  8 processes: 0.001043s (±0.000000s), Speedup: 0.8773x, Efficiency: 10.97%
+
+Matrix size: 1000
+  1 process:  0.006217s (±0.000000s)
+  2 processes: 0.005506s (±0.000000s), Speedup: 1.1292x, Efficiency: 56.46%
+  4 processes: 0.003074s (±0.000000s), Speedup: 2.0227x, Efficiency: 50.57%
+  8 processes: 0.007154s (±0.000000s), Speedup: 0.8690x, Efficiency: 10.86%
+
+Matrix size: 2000
+  1 process:  0.022014s (±0.000000s)
+  2 processes: 0.028323s (±0.000000s), Speedup: 0.7772x, Efficiency: 38.86%
+  4 processes: 0.016822s (±0.000000s), Speedup: 1.3087x, Efficiency: 32.72%
+  8 processes: 0.029937s (±0.000000s), Speedup: 0.7353x, Efficiency: 9.19%
+
+Matrix size: 3000
+  1 process:  0.049425s (±0.000000s)
+  2 processes: 0.058778s (±0.000000s), Speedup: 0.8409x, Efficiency: 42.04%
+  4 processes: 0.060134s (±0.000000s), Speedup: 0.8219x, Efficiency: 20.55%
+  8 processes: 0.053670s (±0.000000s), Speedup: 0.9209x, Efficiency: 11.51%
+
+Matrix size: 4000
+  1 process:  0.082575s (±0.000000s)
+  2 processes: 0.059419s (±0.000000s), Speedup: 1.3897x, Efficiency: 69.49%
+  4 processes: 0.072809s (±0.000000s), Speedup: 1.1341x, Efficiency: 28.35%
+  8 processes: 0.243311s (±0.000000s), Speedup: 0.3394x, Efficiency: 4.24%
+
+Matrix size: 5000
+  1 process:  0.125662s (±0.000000s)
+  2 processes: 0.094209s (±0.000000s), Speedup: 1.3339x, Efficiency: 66.69%
+  4 processes: 0.097867s (±0.000000s), Speedup: 1.2840x, Efficiency: 32.10%
+  8 processes: 0.113801s (±0.000000s), Speedup: 1.1042x, Efficiency: 13.80%
+
+Matrix size: 6000
+  1 process:  0.192184s (±0.000000s)
+  2 processes: 0.121952s (±0.000000s), Speedup: 1.5759x, Efficiency: 78.79%
+  4 processes: 0.149649s (±0.000000s), Speedup: 1.2842x, Efficiency: 32.11%
+  8 processes: 0.156470s (±0.000000s), Speedup: 1.2282x, Efficiency: 15.35%
+
+Matrix size: 7000
+  1 process:  0.220957s (±0.000000s)
+  2 processes: 0.194579s (±0.000000s), Speedup: 1.1356x, Efficiency: 56.78%
+  4 processes: 0.183279s (±0.000000s), Speedup: 1.2056x, Efficiency: 30.14%
+  8 processes: 0.240595s (±0.000000s), Speedup: 0.9184x, Efficiency: 11.48%
+
+Matrix size: 8000
+  1 process:  0.341031s (±0.000000s)
+  2 processes: 0.267214s (±0.000000s), Speedup: 1.2762x, Efficiency: 63.81%
+  4 processes: 0.216061s (±0.000000s), Speedup: 1.5784x, Efficiency: 39.46%
+  8 processes: 0.304216s (±0.000000s), Speedup: 1.1210x, Efficiency: 14.01%
+
+Matrix size: 9000
+  1 process:  0.589951s (±0.000000s)
+  2 processes: 0.361107s (±0.000000s), Speedup: 1.6337x, Efficiency: 81.69%
+  4 processes: 0.315928s (±0.000000s), Speedup: 1.8674x, Efficiency: 46.68%
+  8 processes: 0.575234s (±0.000000s), Speedup: 1.0256x, Efficiency: 12.82%
+
+Matrix size: 10000
+  1 process:  0.544310s (±0.000000s)
+  2 processes: 0.541215s (±0.000000s), Speedup: 1.0057x, Efficiency: 50.29%
+  4 processes: 0.703267s (±0.000000s), Speedup: 0.7740x, Efficiency: 19.35%
+  8 processes: 0.704186s (±0.000000s), Speedup: 0.7730x, Efficiency: 9.66%
+
+Matrix size: 12000
+  1 process:  0.805866s (±0.000000s)
+  2 processes: 0.786552s (±0.000000s), Speedup: 1.0246x, Efficiency: 51.23%
+  4 processes: 0.932869s (±0.000000s), Speedup: 0.8639x, Efficiency: 21.60%
+  8 processes: 0.973205s (±0.000000s), Speedup: 0.8281x, Efficiency: 10.35%
+
+Matrix size: 14000
+  1 process:  1.051518s (±0.000000s)
+  2 processes: 1.572989s (±0.000000s), Speedup: 0.6685x, Efficiency: 33.42%
+  4 processes: 1.326059s (±0.000000s), Speedup: 0.7930x, Efficiency: 19.82%
+  8 processes: 1.416229s (±0.000000s), Speedup: 0.7425x, Efficiency: 9.28%
+
+Matrix size: 16000
+  1 process:  1.385932s (±0.000000s)
+  2 processes: 1.343839s (±0.000000s), Speedup: 1.0313x, Efficiency: 51.57%
+  4 processes: 1.503628s (±0.000000s), Speedup: 0.9217x, Efficiency: 23.04%
+  8 processes: 1.703158s (±0.000000s), Speedup: 0.8137x, Efficiency: 10.17%
+
+Matrix size: 18000
+  1 process:  1.829480s (±0.000000s)
+  2 processes: 1.791422s (±0.000000s), Speedup: 1.0212x, Efficiency: 51.06%
+  4 processes: 2.082284s (±0.000000s), Speedup: 0.8786x, Efficiency: 21.96%
+  8 processes: 2.215501s (±0.000000s), Speedup: 0.8258x, Efficiency: 10.32%
+
+Matrix size: 20000
+  1 process:  2.357766s (±0.000000s)
+  2 processes: 3.173198s (±0.000000s), Speedup: 0.7430x, Efficiency: 37.15%
+  4 processes: 2.464543s (±0.000000s), Speedup: 0.9567x, Efficiency: 23.92%
+  8 processes: 3.406363s (±0.000000s), Speedup: 0.6922x, Efficiency: 8.65%
+
+======================================================================
+
+COLUMN Algorithm:
+----------------------------------------
+
+Matrix size: 500
+  1 process:  0.000757s (±0.000000s)
+  2 processes: 0.000983s (±0.000000s), Speedup: 0.7698x, Efficiency: 38.49%
+  4 processes: 0.000872s (±0.000000s), Speedup: 0.8678x, Efficiency: 21.70%
+  8 processes: 0.001646s (±0.000000s), Speedup: 0.4600x, Efficiency: 5.75%
+
+Matrix size: 1000
+  1 process:  0.003758s (±0.000000s)
+  2 processes: 0.005507s (±0.000000s), Speedup: 0.6823x, Efficiency: 34.12%
+  4 processes: 0.003458s (±0.000000s), Speedup: 1.0868x, Efficiency: 27.17%
+  8 processes: 0.004711s (±0.000000s), Speedup: 0.7976x, Efficiency: 9.97%
+
+Matrix size: 2000
+  1 process:  0.013890s (±0.000000s)
+  2 processes: 0.025452s (±0.000000s), Speedup: 0.5457x, Efficiency: 27.29%
+  4 processes: 0.019378s (±0.000000s), Speedup: 0.7168x, Efficiency: 17.92%
+  8 processes: 0.029650s (±0.000000s), Speedup: 0.4685x, Efficiency: 5.86%
+
+Matrix size: 3000
+  1 process:  0.032529s (±0.000000s)
+  2 processes: 0.048002s (±0.000000s), Speedup: 0.6777x, Efficiency: 33.88%
+  4 processes: 0.045503s (±0.000000s), Speedup: 0.7149x, Efficiency: 17.87%
+  8 processes: 0.055260s (±0.000000s), Speedup: 0.5886x, Efficiency: 7.36%
+
+Matrix size: 4000
+  1 process:  0.056240s (±0.000000s)
+  2 processes: 0.092942s (±0.000000s), Speedup: 0.6051x, Efficiency: 30.26%
+  4 processes: 0.086101s (±0.000000s), Speedup: 0.6532x, Efficiency: 16.33%
+  8 processes: 0.089915s (±0.000000s), Speedup: 0.6255x, Efficiency: 7.82%
+
+Matrix size: 5000
+  1 process:  0.088274s (±0.000000s)
+  2 processes: 0.136114s (±0.000000s), Speedup: 0.6485x, Efficiency: 32.43%
+  4 processes: 0.280063s (±0.000000s), Speedup: 0.3152x, Efficiency: 7.88%
+  8 processes: 0.141981s (±0.000000s), Speedup: 0.6217x, Efficiency: 7.77%
+
+Matrix size: 6000
+  1 process:  0.127578s (±0.000000s)
+  2 processes: 0.176179s (±0.000000s), Speedup: 0.7241x, Efficiency: 36.21%
+  4 processes: 0.238492s (±0.000000s), Speedup: 0.5349x, Efficiency: 13.37%
+  8 processes: 0.318666s (±0.000000s), Speedup: 0.4004x, Efficiency: 5.00%
+
+Matrix size: 7000
+  1 process:  0.170811s (±0.000000s)
+  2 processes: 0.317561s (±0.000000s), Speedup: 0.5379x, Efficiency: 26.89%
+  4 processes: 0.329918s (±0.000000s), Speedup: 0.5177x, Efficiency: 12.94%
+  8 processes: 0.420597s (±0.000000s), Speedup: 0.4061x, Efficiency: 5.08%
+
+Matrix size: 8000
+  1 process:  0.230229s (±0.000000s)
+  2 processes: 0.295086s (±0.000000s), Speedup: 0.7802x, Efficiency: 39.01%
+  4 processes: 0.465468s (±0.000000s), Speedup: 0.4946x, Efficiency: 12.37%
+  8 processes: 0.571267s (±0.000000s), Speedup: 0.4030x, Efficiency: 5.04%
+
+Matrix size: 9000
+  1 process:  0.314207s (±0.000000s)
+  2 processes: 0.478553s (±0.000000s), Speedup: 0.6566x, Efficiency: 32.83%
+  4 processes: 0.501447s (±0.000000s), Speedup: 0.6266x, Efficiency: 15.66%
+  8 processes: 0.904347s (±0.000000s), Speedup: 0.3474x, Efficiency: 4.34%
+
+Matrix size: 10000
+  1 process:  0.352527s (±0.000000s)
+  2 processes: 0.538379s (±0.000000s), Speedup: 0.6548x, Efficiency: 32.74%
+  4 processes: 0.693607s (±0.000000s), Speedup: 0.5083x, Efficiency: 12.71%
+  8 processes: 0.795798s (±0.000000s), Speedup: 0.4430x, Efficiency: 5.54%
+
+Matrix size: 12000
+  1 process:  0.512885s (±0.000000s)
+  2 processes: 0.902970s (±0.000000s), Speedup: 0.5680x, Efficiency: 28.40%
+  4 processes: 1.060313s (±0.000000s), Speedup: 0.4837x, Efficiency: 12.09%
+  8 processes: 1.121129s (±0.000000s), Speedup: 0.4575x, Efficiency: 5.72%
+
+Matrix size: 14000
+  1 process:  0.695224s (±0.000000s)
+  2 processes: 1.275840s (±0.000000s), Speedup: 0.5449x, Efficiency: 27.25%
+  4 processes: 1.247817s (±0.000000s), Speedup: 0.5572x, Efficiency: 13.93%
+  8 processes: 1.677915s (±0.000000s), Speedup: 0.4143x, Efficiency: 5.18%
+
+Matrix size: 16000
+  1 process:  0.986121s (±0.000000s)
+  2 processes: 1.810666s (±0.000000s), Speedup: 0.5446x, Efficiency: 27.23%
+  4 processes: 1.770872s (±0.000000s), Speedup: 0.5569x, Efficiency: 13.92%
+  8 processes: 2.360656s (±0.000000s), Speedup: 0.4177x, Efficiency: 5.22%
+
+Matrix size: 18000
+  1 process:  1.285949s (±0.000000s)
+  2 processes: 2.146172s (±0.000000s), Speedup: 0.5992x, Efficiency: 29.96%
+  4 processes: 2.259080s (±0.000000s), Speedup: 0.5692x, Efficiency: 14.23%
+  8 processes: 2.940302s (±0.000000s), Speedup: 0.4374x, Efficiency: 5.47%
+
+Matrix size: 20000
+  1 process:  1.562519s (±0.000000s)
+  2 processes: 2.673912s (±0.000000s), Speedup: 0.5844x, Efficiency: 29.22%
+  4 processes: 2.991875s (±0.000000s), Speedup: 0.5223x, Efficiency: 13.06%
+  8 processes: 3.757682s (±0.000000s), Speedup: 0.4158x, Efficiency: 5.20%
+
+======================================================================
+
+BLOCK Algorithm:
+----------------------------------------
+
+Matrix size: 500
+  1 process:  0.000291s (±0.000000s)
+  2 processes: 0.000630s (±0.000000s), Speedup: 0.4615x, Efficiency: 23.07%
+  4 processes: 0.000265s (±0.000000s), Speedup: 1.0975x, Efficiency: 27.44%
+  8 processes: 0.000503s (±0.000000s), Speedup: 0.5775x, Efficiency: 7.22%
+
+Matrix size: 1000
+  1 process:  0.001563s (±0.000000s)
+  2 processes: 0.003219s (±0.000000s), Speedup: 0.4856x, Efficiency: 24.28%
+  4 processes: 0.002498s (±0.000000s), Speedup: 0.6258x, Efficiency: 15.64%
+  8 processes: 0.002061s (±0.000000s), Speedup: 0.7583x, Efficiency: 9.48%
+
+Matrix size: 2000
+  1 process:  0.006081s (±0.000000s)
+  2 processes: 0.016575s (±0.000000s), Speedup: 0.3669x, Efficiency: 18.35%
+  4 processes: 0.011519s (±0.000000s), Speedup: 0.5279x, Efficiency: 13.20%
+  8 processes: 0.011816s (±0.000000s), Speedup: 0.5146x, Efficiency: 6.43%
+
+Matrix size: 3000
+  1 process:  0.035156s (±0.000000s)
+  2 processes: 0.044038s (±0.000000s), Speedup: 0.7983x, Efficiency: 39.92%
+  4 processes: 0.030225s (±0.000000s), Speedup: 1.1631x, Efficiency: 29.08%
+  8 processes: 0.030095s (±0.000000s), Speedup: 1.1681x, Efficiency: 14.60%
+
+Matrix size: 4000
+  1 process:  0.058204s (±0.000000s)
+  2 processes: 0.086519s (±0.000000s), Speedup: 0.6727x, Efficiency: 33.64%
+  4 processes: 0.046813s (±0.000000s), Speedup: 1.2433x, Efficiency: 31.08%
+  8 processes: 0.051817s (±0.000000s), Speedup: 1.1233x, Efficiency: 14.04%
+
+Matrix size: 5000
+  1 process:  0.091604s (±0.000000s)
+  2 processes: 0.119517s (±0.000000s), Speedup: 0.7664x, Efficiency: 38.32%
+  4 processes: 0.155917s (±0.000000s), Speedup: 0.5875x, Efficiency: 14.69%
+  8 processes: 0.073993s (±0.000000s), Speedup: 1.2380x, Efficiency: 15.48%
+
+Matrix size: 6000
+  1 process:  0.131136s (±0.000000s)
+  2 processes: 0.202269s (±0.000000s), Speedup: 0.6483x, Efficiency: 32.42%
+  4 processes: 0.220332s (±0.000000s), Speedup: 0.5952x, Efficiency: 14.88%
+  8 processes: 0.289612s (±0.000000s), Speedup: 0.4528x, Efficiency: 5.66%
+
+Matrix size: 7000
+  1 process:  0.182120s (±0.000000s)
+  2 processes: 0.235235s (±0.000000s), Speedup: 0.7742x, Efficiency: 38.71%
+  4 processes: 0.287228s (±0.000000s), Speedup: 0.6341x, Efficiency: 15.85%
+  8 processes: 0.421198s (±0.000000s), Speedup: 0.4324x, Efficiency: 5.40%
+
+Matrix size: 8000
+  1 process:  0.238447s (±0.000000s)
+  2 processes: 0.289550s (±0.000000s), Speedup: 0.8235x, Efficiency: 41.18%
+  4 processes: 0.412753s (±0.000000s), Speedup: 0.5777x, Efficiency: 14.44%
+  8 processes: 0.535302s (±0.000000s), Speedup: 0.4454x, Efficiency: 5.57%
+
+Matrix size: 9000
+  1 process:  0.335245s (±0.000000s)
+  2 processes: 0.417883s (±0.000000s), Speedup: 0.8022x, Efficiency: 40.11%
+  4 processes: 0.572270s (±0.000000s), Speedup: 0.5858x, Efficiency: 14.65%
+  8 processes: 0.780555s (±0.000000s), Speedup: 0.4295x, Efficiency: 5.37%
+
+Matrix size: 10000
+  1 process:  0.370043s (±0.000000s)
+  2 processes: 0.556031s (±0.000000s), Speedup: 0.6655x, Efficiency: 33.28%
+  4 processes: 0.542345s (±0.000000s), Speedup: 0.6823x, Efficiency: 17.06%
+  8 processes: 0.878064s (±0.000000s), Speedup: 0.4214x, Efficiency: 5.27%
+
+Matrix size: 12000
+  1 process:  0.539932s (±0.000000s)
+  2 processes: 0.709115s (±0.000000s), Speedup: 0.7614x, Efficiency: 38.07%
+  4 processes: 0.883832s (±0.000000s), Speedup: 0.6109x, Efficiency: 15.27%
+  8 processes: 1.146790s (±0.000000s), Speedup: 0.4708x, Efficiency: 5.89%
+
+Matrix size: 14000
+  1 process:  0.776384s (±0.000000s)
+  2 processes: 1.156854s (±0.000000s), Speedup: 0.6711x, Efficiency: 33.56%
+  4 processes: 1.454389s (±0.000000s), Speedup: 0.5338x, Efficiency: 13.35%
+  8 processes: 1.962702s (±0.000000s), Speedup: 0.3956x, Efficiency: 4.94%
+
+Matrix size: 16000
+  1 process:  1.014634s (±0.000000s)
+  2 processes: 1.521671s (±0.000000s), Speedup: 0.6668x, Efficiency: 33.34%
+  4 processes: 1.749368s (±0.000000s), Speedup: 0.5800x, Efficiency: 14.50%
+  8 processes: 2.277229s (±0.000000s), Speedup: 0.4456x, Efficiency: 5.57%
+
+Matrix size: 18000
+  1 process:  1.734768s (±0.000000s)
+  2 processes: 1.806853s (±0.000000s), Speedup: 0.9601x, Efficiency: 48.01%
+  4 processes: 2.024932s (±0.000000s), Speedup: 0.8567x, Efficiency: 21.42%
+  8 processes: 2.921511s (±0.000000s), Speedup: 0.5938x, Efficiency: 7.42%
+
+Matrix size: 20000
+  1 process:  1.920757s (±0.000000s)
+  2 processes: 2.024650s (±0.000000s), Speedup: 0.9487x, Efficiency: 47.43%
+  4 processes: 3.118057s (±0.000000s), Speedup: 0.6160x, Efficiency: 15.40%
+  8 processes: 3.919671s (±0.000000s), Speedup: 0.4900x, Efficiency: 6.13%
+
+======================================================================
+
