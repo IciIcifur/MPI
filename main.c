@@ -39,7 +39,7 @@ int main(int argc, char *argv[]) {
         printf("LAB 1\n");
         printf("Enter task number:\n1 - Finding PI\n2 - Matrix Multiplication\n3 - Cannon's Matrix Multiplication\n");
 
-        while (selectedTask != 1) {
+        while (selectedTask < 1 || selectedTask > 3) {
             const int scan_result = scanf("%d", &selectedTask);
             if (scan_result != 1) {
                 printf("Error reading input. Please enter a number.\n");

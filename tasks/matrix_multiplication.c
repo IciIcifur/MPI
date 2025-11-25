@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
+#include <math.h>
 
 extern int requested_matrix_size;
 
@@ -147,48 +148,61 @@ static void block(int n, double *Aroot, double *x) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-    int c0, cc; split_1d(n, rank, size, &c0, &cc);
+    int p_row = (int)sqrt(size), p_col = (size + p_row - 1) / p_row;
+    int B_row = (n + p_row - 1) / p_row;
+    int B_col = (n + p_col - 1) / p_col;
 
-    int B = 512;
-    if (B > cc) B = cc;
+    int proc_row = rank / p_col;
+    int proc_col = rank % p_col;
 
-    double *cols = (cc > 0) ? (double*)malloc((size_t)n*(size_t)cc*sizeof(double)) : NULL;
+    int row_start = proc_row * B_row;
+    int row_end = ((row_start + B_row) < n) ? (row_start + B_row) : n;
+    int num_rows = row_end - row_start;
+
+    int col_start = proc_col * B_col;
+    int col_end = ((col_start + B_col) < n) ? (col_start + B_col) : n;
+    int num_cols = col_end - col_start;
+
+    double *A_block = (num_rows > 0 && num_cols > 0) ? (double*)malloc((size_t)num_rows * (size_t)num_cols * sizeof(double)) : NULL;
 
     if (rank == 0) {
         for (int r = 0; r < size; ++r) {
-            int s, c; split_1d(n, r, size, &s, &c);
-            if (c <= 0) continue;
+            int r_proc_row = r / p_col;
+            int r_proc_col = r % p_col;
+            int r_row_start = r_proc_row * B_row;
+            int r_row_end = ((r_row_start + B_row) < n) ? (r_row_start + B_row) : n;
+            int r_num_rows = r_row_end - r_row_start;
+            int r_col_start = r_proc_col * B_col;
+            int r_col_end = ((r_col_start + B_col) < n) ? (r_col_start + B_col) : n;
+            int r_num_cols = r_col_end - r_col_start;
+            if (r_num_rows <= 0 || r_num_cols <= 0) continue;
 
-            if (r == 0) {
-                for (int i = 0; i < n; ++i) {
-                    const double *rowp = Aroot + (size_t)i*(size_t)n + s;
-                    memcpy(cols + (size_t)i*(size_t)c, rowp, (size_t)c*sizeof(double));
-                }
-            } else {
-                double *buf = (double*)malloc((size_t)n*(size_t)c*sizeof(double));
-                for (int i = 0; i < n; ++i) {
-                    const double *rowp = Aroot + (size_t)i*(size_t)n + s;
-                    memcpy(buf + (size_t)i*(size_t)c, rowp, (size_t)c*sizeof(double));
-                }
-                MPI_Send(buf, n*c, MPI_DOUBLE, r, 30, MPI_COMM_WORLD);
-                free(buf);
-            }
+            double *buf = (double*)malloc((size_t)r_num_rows * (size_t)r_num_cols * sizeof(double));
+            for (int i = 0; i < r_num_rows; ++i)
+                memcpy(buf + i * r_num_cols,
+                       Aroot + (r_row_start + i) * n + r_col_start,
+                       r_num_cols * sizeof(double));
+
+            if (r == 0)
+                memcpy(A_block, buf, r_num_rows * r_num_cols * sizeof(double));
+            else
+                MPI_Send(buf, r_num_rows * r_num_cols, MPI_DOUBLE, r, 40, MPI_COMM_WORLD);
+
+            free(buf);
         }
-    } else if (cc > 0) {
-        MPI_Recv(cols, n*cc, MPI_DOUBLE, 0, 30, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+    } else if (num_rows > 0 && num_cols > 0) {
+        MPI_Recv(A_block, num_rows*num_cols, MPI_DOUBLE, 0, 40, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
     }
 
     double *y_partial = (double*)calloc((size_t)n, sizeof(double));
-    if (cc > 0) {
-        for (int jb = 0; jb < cc; jb += B) {
-            int w = (jb + B <= cc) ? B : (cc - jb);
-            const double *xseg = x + c0 + jb;
-            for (int i = 0; i < n; ++i) {
-                const double *rowc = cols + (size_t)i*(size_t)cc + jb;
-                double s = 0.0;
-                for (int j = 0; j < w; ++j) s += rowc[j] * xseg[j];
-                y_partial[i] += s;
+    if (A_block && num_rows > 0 && num_cols > 0) {
+        for (int i = 0; i < num_rows; ++i) {
+            int global_row = row_start + i;
+            double sum = 0.0;
+            for (int j = 0; j < num_cols; ++j) {
+                sum += A_block[i * num_cols + j] * x[col_start + j];
             }
+            y_partial[global_row] += sum;
         }
     }
 
@@ -201,7 +215,7 @@ static void block(int n, double *Aroot, double *x) {
     MPI_Reduce(&t_local, &t_max, 1, MPI_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
     if (rank == 0) printf("BLOCK|%d|%.13lf\n", n, t_max);
 
-    free(cols); free(y_partial);
+    free(A_block); free(y_partial);
     if (rank == 0) free(y);
 }
 
